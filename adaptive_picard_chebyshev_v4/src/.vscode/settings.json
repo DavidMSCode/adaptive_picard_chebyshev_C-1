@@ -1,0 +1,14 @@
+{
+    "files.associations": {
+        "adaptive_picard_chebyshev.h": "c",
+        "egm2008.h": "c",
+        "exponentialdragmodel.h": "c",
+        "satellite_properties.h": "c",
+        "c_functions.h": "c",
+        "fandg.h": "c",
+        "eci2ecef.h": "c",
+        "ecef2eci.h": "c",
+        "perturbed_gravity.h": "c",
+        "picard_error_feedback.h": "c"
+    }
+}

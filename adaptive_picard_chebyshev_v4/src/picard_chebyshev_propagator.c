@@ -45,10 +45,11 @@
 #include "reosc_perigee.h"
 #include "c_functions.h"
 
+
 void picard_chebyshev_propagator(double* r0, double* v0, double t0, double t_final,double deg, double tol, double Period,
    double* tvec, double* t_orig, int seg, int N, int M, int* prep_HS, int coeff_size, int soln_size, int* total_seg,
    double* P1, double* P2, double* T1, double* T2, double* A, double* Ta, double* W1, double* W2, double* Feval,
-   double* ALPHA, double* BETA, double* segment_times){
+   double* ALPHA, double* BETA, double* segment_times, struct satellite_properties sat){
 
   int loop    = 0;      // Break loop condition
   int k       = 0;      // Counter: segments per orbit
@@ -132,7 +133,7 @@ void picard_chebyshev_propagator(double* r0, double* v0, double t0, double t_fin
     // }
 
     // PICARD ITERATION
-    picard_iteration(r0,v0,X,V,times,N,M,deg,hot,tol,P1,P2,T1,T2,A,Feval,Alpha,Beta);
+    picard_iteration(r0,v0,X,V,times,N,M,deg,hot,tol,P1,P2,T1,T2,A,Feval,Alpha,Beta,sat);
 
     // Loop exit condition
     if (fabs(tf - t_final)/tf < 1e-12){

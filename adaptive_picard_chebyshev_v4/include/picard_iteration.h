@@ -15,8 +15,9 @@
 #include <string.h>
 #include <stdlib.h>
 #include "const.h"
+#include "satellite_properties.h"
 
 void picard_iteration(double* Xint, double* Vint, double* X, double* V, double* times, int N, int M, double deg, int hot, double tol,
-  double* P1, double* P2, double* T1, double* T2, double* A, double* Feval, double* Alpha, double* Beta);
+  double* P1, double* P2, double* T1, double* T2, double* A, double* Feval, double* Alpha, double* Beta, struct satellite_properties sat);
 
 #endif

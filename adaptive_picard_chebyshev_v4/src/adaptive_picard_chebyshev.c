@@ -36,7 +36,7 @@
 #include "interpolate.h"
 #include "c_functions.h"
 
-void adaptive_picard_chebyshev(double* r0,double* v0, double t0, double tf, double dt, double deg, double tol, int soln_size, double* Feval, double* Soln){
+void adaptive_picard_chebyshev(double* r0,double* v0, double t0, double tf, double dt, double deg, double tol, int soln_size, double* Feval, double* Soln, struct satellite_properties sat){
 
   /* 1. DETERMINE DEGREE/SEGMENTATION SCHEME
   Compute the polynomial degree and number of segments per orbit that will
@@ -91,7 +91,7 @@ void adaptive_picard_chebyshev(double* r0,double* v0, double t0, double tf, doub
   double W2[sz];
   memset( W2, 0.0, (sz*sizeof(double)));
   picard_chebyshev_propagator(r0,v0,t0,tf,deg,tol,Period,tvec,t_orig,seg,N,M,&prep_HS,coeff_size,soln_size,&total_seg,
-    P1,P2,T1,T2,A,Ta,W1,W2,Feval,ALPHA,BETA,segment_times);
+    P1,P2,T1,T2,A,Ta,W1,W2,Feval,ALPHA,BETA,segment_times, sat);
 
   // /* 4. INTERPOLATE SOLUTION
   // The Chebyshev coefficients from each of the orbit segments are used to compute

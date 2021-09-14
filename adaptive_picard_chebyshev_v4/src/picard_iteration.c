@@ -1,7 +1,7 @@
 /*
 *  AUTHORS:          Robyn Woollands (robyn.woollands@gmail.com)
 *  DATE WRITTEN:     May 2017
-*  LAST MODIFIED:    May 2017
+*  LAST MODIFIED:    Aug 2021
 *  AFFILIATION:      Department of Aerospace Engineering, Texas A&M University, College Station, TX
 *  DESCRIPTION:      Picard Iteration
 *
@@ -35,18 +35,18 @@
 *    JGCD, submitted 2017.
 */
 
-#include "picard_iteration.h"
-#include "c_functions.h"
-#include "FandG.h"
-#include "eci2ecef.h"
-#include "ecef2eci.h"
-#include "perturbed_gravity.h"
-#include "picard_error_feedback.h"
-
-#include "EGM2008.h"
+#include "../include/picard_iteration.h"
+#include "../include/c_functions.h"
+#include "../include/FandG.h"
+#include "../include/eci2ecef.h"
+#include "../include/ecef2eci.h"
+#include "../include/perturbed_gravity.h"
+#include "../include/picard_error_feedback.h"
+#include "../include/exponentialDragModel.h"
+#include "../include/EGM2008.h"
 
 void picard_iteration(double* Xint, double* Vint, double* X, double* V, double* times, int N, int M, double deg, int hot, double tol,
-  double* P1, double* P2, double* T1, double* T2, double* A, double* Feval, double* Alpha, double* Beta){
+  double* P1, double* P2, double* T1, double* T2, double* A, double* Feval, double* Alpha, double* Beta, struct satellite_properties sat){
 
   // Initialization
   double xI[3]        = {0.0};
@@ -54,6 +54,7 @@ void picard_iteration(double* Xint, double* Vint, double* X, double* V, double* 
   double xECEF[3]     = {0.0};
   double vECEF[3]     = {0.0};
   double aECEF[3]     = {0.0};
+  double dragECEF[3]  = {0.0};                        //DS: Added for drag acceleration
   double aECI[3]      = {0.0};
   double del_X[3]     = {0.0};
   double del_aECEF[3] = {0.0};
@@ -106,10 +107,16 @@ void picard_iteration(double* Xint, double* Vint, double* X, double* V, double* 
       eci2ecef(times[i-1],xI,vI,xECEF,vECEF);
       // Compute Variable Fidelity Gravity
       perturbed_gravity(times[i-1],xECEF,err,i,M,deg,hot,aECEF,tol,&itr,Feval);
+      // Compute atmospheric drag using vallado's exponential density model
+      //drag_acceleration(times[i-1],xECEF,vECEF,dragECEF,sat);
+      // Sum accelerations
+      for (int k=0;k<3;k++){
+        aECEF[k]+=dragECEF[k];
+      }
       // Convert from ECEF to ECI
       ecef2eci(times[i-1],aECEF,aECI);
       for (int j=1; j<=3; j++){
-        G[ID2(i,j,M+1)]      = aECI[j-1];
+        G[ID2(i,j,M+1)]     = aECI[j-1];
         xECIp[ID2(i,j,M+1)] = xI[j-1];
       }
     }
