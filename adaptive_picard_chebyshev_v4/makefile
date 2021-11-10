@@ -6,13 +6,14 @@
 #  DESCRIPTION:      File to compile adaptive_picard_chebyshev code
 #
 
-IDIR = ../include
-CC = gcc -std=c99 -g
-# CC = gcc
+IDIR = include
+CC = clang -std=c99 -ggdb
 CFLAGS = -I$(IDIR)
 
 ODIR = obj
-LDIR = ../lib
+LDIR = lib
+SDIR = src
+BDIR = bin
 
 LIBS = -lm
 
@@ -34,14 +35,15 @@ OBJ1 = $(patsubst %,$(ODIR)/%,$(_OBJ1))
 _OBJ2 = matrix_builder.o clenshaw_curtis_ivpII.o lsq_chebyshev_fit.o chebyshev.o c_functions.o
 OBJ2 = $(patsubst %,$(ODIR)/%,$(_OBJ2))
 
-$(ODIR)/%.o: %.c $(DEPS1) $(DEPS2)
+$(ODIR)/%.o: $(SDIR)/%.c $(DEPS1) $(DEPS2)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 test: $(OBJ1)
-	gcc -g -o $@ $^ $(CFLAGS) $(LIBS)
+
+	clang -ggdb -o $(BDIR)/$@ $^ $(CFLAGS) $(LIBS) 
 
 matrix_builder: $(OBJ2)
-	gcc -g -o $@ $^ $(CFLAGS) $(LIBS)
+	gcc -g -o $(BDIR)/$@ $^ $(CFLAGS) $(LIBS)
 
 .PHONY: clean
 

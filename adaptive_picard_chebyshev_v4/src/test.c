@@ -1,17 +1,18 @@
 /*
 *  AUTHORS:          Robyn Woollands (robyn.woollands@gmail.com)
 *  DATE WRITTEN:     May 2017
-*  LAST MODIFIED:    May 2017
+*  LAST MODIFIED:    Aug 2021
 *  AFFILIATION:      Department of Aerospace Engineering, Texas A&M University, College Station, TX
 *  DESCRIPTION:      Set up an Adaptive-Picard-Chebyshev integration test case
 *  REFERENCE:        Woollands, R., and Junkins, J., "Nonlinear Differential Equation Solvers
 *                    via Adaptive Picard-Chebyshev Iteration: Applications in Astrodynamics", JGCD, 2016.
 */
 
-#include "adaptive_picard_chebyshev.h"
-#include "c_functions.h"
-#include "EGM2008.h"
-#include <time.h>
+#include <adaptive_picard_chebyshev.h>
+#include <c_functions.h>
+#include <EGM2008.h>
+#include <time.h> 
+#include <errno.h>
 
 FILE *fID;
 
@@ -19,10 +20,10 @@ int main(){
 
   // Initialize Input Variables
   // LEO
-  double r0[3] = {7000.0, 0.0, 0.0};                // Initial Position (km)
-  double v0[3] = {0.0, 8.003798178945150, 0.0};     // Initial Velocity (km/s)
-  double t0    = 0.0;                               // Initial Times (s)
-  double tf    = 3.0*7.121081577578024e+03;         // Final Time (s)
+  double r0[3] = {6500, 0.0, 0.0};                // Initial Position (km)
+  double v0[3] = {0.0, 7.90882662, 0.0};          // Initial Velocity (km/s)
+  double t0    = 0.0;                             // Initial Times (s)
+  double tf    = 10*5059.648765;         // Final Time (s)
   // MEO
   // double r0[3] = {9000.0, 0.0, 0.0};                                // Initial Position (km)
   // double v0[3] = {0.0, 6.7419845635570, 1.806509319188210};         // Initial Velocity (km/s)
@@ -77,7 +78,11 @@ int main(){
   double H    = 0.0;
   double H0   = 0.0;
   double Hmax = 0.0;
-  fID = fopen((const char*)"./output.txt",(const char*)"w");
+  fID = fopen((const char*)"output.txt",(const char*)"w");
+  if (fID == NULL) {
+    printf ("Error %d opening input file\n", errno);
+    exit (1);
+}
   double t_curr = t0;
   for (int i=1; i<=soln_size; i++){
     fprintf(fID,"%1.16E\t", t_curr);
