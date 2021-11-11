@@ -79,9 +79,9 @@ void adaptive_picard_chebyshev(double* r0,double* v0, double t0, double tf, doub
   Propagate from t0 to tf, iterating on each segment (Picard Iteration), until
   completion. */
   double *ALPHA;
-  ALPHA = calloc((coeff_size*3),sizeof(double));
+  ALPHA = static_cast<double*>(calloc((coeff_size*3),sizeof(double)));
   double *BETA;
-  BETA = calloc((coeff_size*3),sizeof(double));
+  BETA = static_cast<double*>(calloc((coeff_size*3),sizeof(double)));
   int total_seg = 0;
   int sz = (int) ceil(1.1*tf/Period)*seg;
   double segment_times[sz];

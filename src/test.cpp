@@ -55,7 +55,7 @@ int main(){
     soln_size = 2;
   }
   double *Soln;
-  Soln = calloc(soln_size*6,sizeof(double));       // Position (km) & Velocity (km/s)
+  Soln = static_cast<double*>(calloc(soln_size*6,sizeof(double)));       // Position (km) & Velocity (km/s)
 
   double Feval[2] = {0.0};
 
