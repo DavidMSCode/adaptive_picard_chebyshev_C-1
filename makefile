@@ -7,8 +7,11 @@
 #
 
 IDIR = include
+PBDIR = extern/pybind11/include/pybind11
+PyDIR = /Library/Frameworks/Python.framework/Versions/3.9/include/python3.9
 CC = clang++ -std=c++11 -ggdb
-CFLAGS = -I$(IDIR)
+CFLAGS = -I$(IDIR) 
+PFLAGS = -I$(PBDIR) -I$(PyDIR)
 
 ODIR = obj
 LDIR = lib
@@ -35,20 +38,26 @@ OBJ1 = $(patsubst %,$(ODIR)/%,$(_OBJ1))
 _OBJ2 = matrix_builder.o clenshaw_curtis_ivpII.o lsq_chebyshev_fit.o chebyshev.o c_functions.o
 OBJ2 = $(patsubst %,$(ODIR)/%,$(_OBJ2))
 
-$(ODIR)/%.o: $(SDIR)/%.c $(DEPS1) $(DEPS2)
-	$(CC) -c -o $@ $< $(CFLAGS)
+_OBJ3 = APyC.o adaptive_picard_chebyshev.o polydegree_segments.o picard_chebyshev_propagator.o prepare_propagator.o \
+picard_iteration.o clenshaw_curtis_ivpII.o rv2elm.o c_functions.o FandG.o perigee_approx.o EGM2008.o \
+lsq_chebyshev_fit.o chebyshev.o radial_gravity.o matrix_loader.o eci2ecef.o ecef2eci.o perturbed_gravity.o \
+picard_error_feedback.o interpolate.o reosc_perigee.o
+OBJ3 = $(patsubst %,$(ODIR)/%,$(_OBJ3))
+
 $(ODIR)/%.o: $(SDIR)/%.cpp $(DEPS1) $(DEPS2)
-	$(CC) -c -o $@ $< $(CFLAGS)
+	$(CC) -c -o $@ $< $(CFLAGS) -arch x86_64
 
 test: $(OBJ1)
 
 	clang++ -ggdb -o $(BDIR)/$@ $^ $(CFLAGS) $(LIBS) 
 
 matrix_builder: $(OBJ2)
-	gcc -g -o $(BDIR)/$@ $^ $(CFLAGS) $(LIBS)
+	clang++ -g -o $(BDIR)/$@ $^ $(CFLAGS) $(LIBS)
 
-APyC: $(OBJ1) 
+.PHONY: APyC
 
+APyC: $(OBJ3)
+	clang++ -o3 -Wall -shared -std=c++11 -fPIC -o $(BDIR)/$@.cpython-38-darwin.so $^ -undefined dynamic_lookup -arch x86_64 $(CFLAGS) $(LIBS)
 .PHONY: clean
 
 clean:

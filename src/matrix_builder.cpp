@@ -83,12 +83,12 @@ int main(){
   }
 
   // Open Files
-  FILE* fT2 = fopen("../matrices/T2_matrices.bin","wb");
-  FILE* fP2 = fopen("../matrices/P2_matrices.bin","wb");
-  FILE* fT1 = fopen("../matrices/T1_matrices.bin","wb");
-  FILE* fP1 = fopen("../matrices/P1_matrices.bin","wb");
-  FILE* fTa = fopen("../matrices/Ta_matrices.bin","wb");
-  FILE* fA  = fopen("../matrices/A_matrices.bin","wb");
+  FILE* fT2 = fopen("matrices/T2_matrices.bin","wb");
+  FILE* fP2 = fopen("matrices/P2_matrices.bin","wb");
+  FILE* fT1 = fopen("matrices/T1_matrices.bin","wb");
+  FILE* fP1 = fopen("matrices/P1_matrices.bin","wb");
+  FILE* fTa = fopen("matrices/Ta_matrices.bin","wb");
+  FILE* fA  = fopen("matrices/A_matrices.bin","wb");
 
   // Confirm Opening
   if ( !fT2 ){
