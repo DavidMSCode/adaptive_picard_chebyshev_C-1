@@ -2,7 +2,7 @@ from glob import glob
 from setuptools import setup
 from pybind11.setup_helpers import Pybind11Extension
 __version__ = "0.0.1"
-cpp_args = ['-std=c++11', '-stdlib=libc++', '-mmacosx-version-min=10.7']
+cpp_args = ['-std=c++11']
 ext_modules = [
     Pybind11Extension(
         "APCexample",
