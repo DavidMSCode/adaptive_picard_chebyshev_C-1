@@ -13,7 +13,7 @@
 #include <EGM2008.h>
 #include <time.h> 
 #include <errno.h>
-#include <pybind11.h>
+#include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
 
@@ -111,11 +111,10 @@ int APyC(std::vector<double> r, std::vector<double> v, double t0, double tf){
   printf("Hmax %1.16E\n",Hmax);
   fclose(fID);
   free(Soln);
-
 }
 
 
-PYBIND11_MODULE(APyC, m) {
+PYBIND11_MODULE(APCexample, m) {
   m.doc() = "Test plugin for adaptive picard chebychev integrator";
   using namespace pybind11::literals;
   m.def("APyC", &APyC, "r0"_a, "v0"_a, "t0"_a, "tf"_a, "takes satellite state around Earth and returns a textfile of the output");

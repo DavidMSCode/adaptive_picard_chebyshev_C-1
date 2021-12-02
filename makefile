@@ -49,7 +49,7 @@ $(ODIR)/%.o: $(SDIR)/%.cpp $(DEPS1) $(DEPS2)
 
 test: $(OBJ1)
 
-	clang++ -ggdb -o $(BDIR)/$@ $^ $(CFLAGS) $(LIBS) 
+	clang++ -ggdb -o $(BDIR)/$@ $^ $(CFLAGS) $(LIBS)  -arch x86_64
 
 matrix_builder: $(OBJ2)
 	clang++ -g -o $(BDIR)/$@ $^ $(CFLAGS) $(LIBS)
