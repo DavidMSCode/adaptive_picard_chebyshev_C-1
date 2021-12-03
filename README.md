@@ -1,14 +1,14 @@
 # adaptive_picard_chebyshev
 This repository contains the python wrapper for the adaptive Picard-Chebyshev C++ code for propagating orbits around the Earth, using cartesian coordinates.
-Build Requirements
-[Windows]
+# Build Requirements
+>[Windows]  
 Visual Studio Code 2017+
 
-[Linux-Debian]
+[Linux-Debian]  
 python3-dev
 build-essential
 
-[Linux-RedHat]
+[Linux-RedHat]  
 python3-devel
 build-essential
 
