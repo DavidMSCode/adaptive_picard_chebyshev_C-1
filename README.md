@@ -5,14 +5,14 @@ This repository contains the python wrapper for the adaptive Picard-Chebyshev C+
 Visual Studio Code 2017+
 
 [Linux-Debian]  
-python3-dev
+python3-dev  
 build-essential
 
 [Linux-RedHat]  
-python3-devel
+python3-devel  
 build-essential
 
-[Mac OS]
+[Mac OS]  
 Xcode Command Line Tools
 
 To install this module on Mac OS
