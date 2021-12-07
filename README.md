@@ -1,7 +1,13 @@
 # adaptive_picard_chebyshev pythonbind11
 This repository contains the python wrapper for the adaptive Picard-Chebyshev C++ code for propagating orbits around the Earth, using cartesian coordinates.
+
+## Disclaimer
+This tool is experimental and should not be run on any production environment. There are currently few safeguards in the C++ code to catch errors. Bad input can and will cause a segmentation fault in the C++ binary and it will take the python kernel with it. To prevent loss of data it's recommended to run this program only within its own Python virtual environment.
+
 ## Build Requirements
 ```
+All operating systems require Python 3.6+ and Pip 10+
+
 [Windows]  
 Visual Studio Code 2017+
 
