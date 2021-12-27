@@ -114,7 +114,7 @@ int APyC(std::vector<double> r, std::vector<double> v, double t0, double tf){
 }
 
 
-PYBIND11_MODULE(APCexample, m) {
+PYBIND11_MODULE(APyC, m) {
   m.doc() = "Test plugin for adaptive picard chebychev integrator";
   using namespace pybind11::literals;
   m.def("APyC", &APyC, "r0"_a, "v0"_a, "t0"_a, "tf"_a, "takes satellite state around Earth and returns a textfile of the output");
