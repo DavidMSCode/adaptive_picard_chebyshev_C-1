@@ -14,6 +14,7 @@
 #include <time.h> 
 #include <errno.h>
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 
 
 int APyC(std::vector<double> r, std::vector<double> v, double t0, double tf){
