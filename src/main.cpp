@@ -7,7 +7,7 @@
 *  REFERENCE:        Woollands, R., and Junkins, J., "Nonlinear Differential Equation Solvers
 *                    via Adaptive Picard-Chebyshev Iteration: Applications in Astrodynamics", JGCD, 2016.
 */
-#include <pybind11\pybind11.h>
+#include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include <adaptive_picard_chebyshev.h>
 #include <c_functions.h>
