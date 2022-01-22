@@ -5,8 +5,8 @@ from pybind11.setup_helpers import Pybind11Extension
 import os
 __version__ = "0.0.1"
 extra_args = []
-if os.name!='nt':
-    extra_args = '-std=c++11'
+if os.name != 'nt':
+    extra_args.append('-std=c++11')
 
 ext_modules = [
     Pybind11Extension(
