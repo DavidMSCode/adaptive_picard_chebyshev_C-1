@@ -7,14 +7,14 @@
 *  REFERENCE:        Woollands, R., and Junkins, J., "Nonlinear Differential Equation Solvers
 *                    via Adaptive Picard-Chebyshev Iteration: Applications in Astrodynamics", JGCD, 2016.
 */
-
+#include <pybind11\pybind11.h>
+#include <pybind11/stl.h>
 #include <adaptive_picard_chebyshev.h>
 #include <c_functions.h>
 #include <EGM2008.h>
 #include <time.h> 
 #include <errno.h>
-#include <pybind11/pybind11.h>
-//#include <pybind11/stl.h>
+
 
 
 void APC(std::vector<double> r, std::vector<double> v, double t0, double tf){

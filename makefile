@@ -9,7 +9,7 @@
 IDIR = include
 PBDIR = extern/pybind11/include/pybind11
 PyDIR = /Library/Frameworks/Python.framework/Versions/3.9/include/python3.9
-CC = clang++ -std=c++11 -ggdb
+CC = cl -std=c++11 -ggdb
 CFLAGS = -I$(IDIR) 
 PFLAGS = -I$(PBDIR) -I$(PyDIR)
 
@@ -45,11 +45,10 @@ picard_error_feedback.o interpolate.o reosc_perigee.o
 OBJ3 = $(patsubst %,$(ODIR)/%,$(_OBJ3))
 
 $(ODIR)/%.o: $(SDIR)/%.cpp $(DEPS1) $(DEPS2)
-	$(CC) -c -o $@ $< $(CFLAGS) -arch x86_64
+	$(CC) -c -o $@ $< $(CFLAGS)
 
 test: $(OBJ1)
-
-	clang++ -ggdb -o $(BDIR)/$@ $^ $(CFLAGS) $(LIBS)  -arch x86_64
+	cl -ggdb -o $(BDIR)/$@ $^ $(CFLAGS) $(LIBS)
 
 matrix_builder: $(OBJ2)
 	clang++ -g -o $(BDIR)/$@ $^ $(CFLAGS) $(LIBS)
