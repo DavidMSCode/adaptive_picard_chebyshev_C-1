@@ -35,6 +35,7 @@
 #include "picard_chebyshev_propagator.h"
 #include "interpolate.h"
 #include "c_functions.h"
+#include <vector>
 
 void adaptive_picard_chebyshev(double* r0,double* v0, double t0, double tf, double dt, double deg, double tol, int soln_size, double* Feval, double* Soln){
 
@@ -57,22 +58,22 @@ void adaptive_picard_chebyshev(double* r0,double* v0, double t0, double tf, doub
   // Initialize Arrays
   int M = N;                // # sample points = polynomial degree
   int prep_HS = -1;         // Hot start switch condition
-  double T2[(M+1)*(N+1)];   // [(M+1)x(N+1)]
-  memset( T2, 0.0, ((M+1)*(N+1)*sizeof(double)));
-  double P2[(N+1)*N];       // [(N+1)xN]
-  memset( P2, 0.0, ((N+1)*N*sizeof(double)));
-  double T1[(M+1)*N];       // [(M+1)xN]
-  memset( T1, 0.0, ((M+1)*N*sizeof(double)));
-  double P1[N*(N-1)];       // [Nx(N-1)]
-  memset( P1, 0.0, (N*(N-1)*sizeof(double)));
-  double Ta[(M+1)*(N-1)];   // [(M+1)x(N-1)]
-  memset( Ta, 0.0, ((M+1)*(N-1)*sizeof(double)));
-  double A[(N-1)*(M+1)];    // [(N-1)x(M+1)]
-  memset( A, 0.0, ((N-1)*(M+1)*sizeof(double)));
-  double t_orig[seg+1];
-  memset( t_orig, 0.0, ((seg+1)*sizeof(double)));
-  double tvec[seg+1];
-  memset( tvec, 0.0, ((seg+1)*sizeof(double)));
+  std::vector<double> T2((M+1)*(N+1),0.0);   // [(M+1)x(N+1)]
+  //memset( T2, 0.0, ((M+1)*(N+1)*sizeof(double)));
+  std::vector<double> P2((N+1)*N,0.0);       // [(N+1)xN]
+  //memset( P2, 0.0, ((N+1)*N*sizeof(double)));
+  std::vector<double> T1((M+1)*N,0.0);       // [(M+1)xN]
+  //memset( T1, 0.0, ((M+1)*N*sizeof(double)));
+  std::vector<double> P1(N*(N-1),0.0);       // [Nx(N-1)]
+  //memset( P1, 0.0, (N*(N-1)*sizeof(double)));
+  std::vector<double> Ta((M+1)*(N-1),0.0);   // [(M+1)x(N-1)]
+  //memset( Ta, 0.0, ((M+1)*(N-1)*sizeof(double)));
+  std::vector<double> A((N-1)*(M+1),0.0);    // [(N-1)x(M+1)]
+  //memset( A, 0.0, ((N-1)*(M+1)*sizeof(double)));
+  std::vector<double> t_orig(seg+1,0.0);
+  //memset( t_orig, 0.0, ((seg+1)*sizeof(double)));
+  std::vector<double> tvec(seg+1,0.0);
+  //memset( tvec, 0.0, ((seg+1)*sizeof(double)));
   prepare_propagator(r0,v0,t0,tf,dt,tp,tol,N,M,seg,&prep_HS,t_orig,tvec,P1,P2,T1,T2,A,Ta);
 
   /* 3. PICARD-CHEBYSHEV PROPAGATOR
@@ -84,12 +85,12 @@ void adaptive_picard_chebyshev(double* r0,double* v0, double t0, double tf, doub
   BETA = static_cast<double*>(calloc((coeff_size*3),sizeof(double)));
   int total_seg = 0;
   int sz = (int) ceil(1.1*tf/Period)*seg;
-  double segment_times[sz];
-  memset( segment_times, 0.0, (sz*sizeof(double)));
-  double W1[sz];
-  memset( W1, 0.0, (sz*sizeof(double)));
-  double W2[sz];
-  memset( W2, 0.0, (sz*sizeof(double)));
+  std::vector<double> segment_times(sz,0.0);
+  //memset( segment_times, 0.0, (sz*sizeof(double)));
+  std::vector<double> W1(sz,0.0);
+  //memset( W1, 0.0, (sz*sizeof(double)));
+  std::vector<double> W2(sz,0.0);
+  //memset( W2, 0.0, (sz*sizeof(double)));
   picard_chebyshev_propagator(r0,v0,t0,tf,deg,tol,Period,tvec,t_orig,seg,N,M,&prep_HS,coeff_size,soln_size,&total_seg,
     P1,P2,T1,T2,A,Ta,W1,W2,Feval,ALPHA,BETA,segment_times);
 

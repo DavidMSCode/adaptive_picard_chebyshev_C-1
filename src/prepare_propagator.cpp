@@ -36,10 +36,11 @@
 #include "matrix_loader.h"
 #include "rv2elm.h"
 #include "c_functions.h"
+#include <vector>
 
 void prepare_propagator(double* r0, double* v0, double t0, double t_final, double dt, double tp, double tol,
-  int N, int M, int seg, int* prep_HS, double* t_orig, double* tvec,
-  double* P1, double* P2, double* T1, double* T2, double* A, double* Ta){
+  int N, int M, int seg, int* prep_HS, std::vector<double> t_orig, std::vector<double> tvec,
+  std::vector<double> P1, std::vector<double> P2, std::vector<double> T1, std::vector<double> T2, std::vector<double> A, std::vector<double> Ta){
 
   // Compute Keplerian Orbit Period
   double a, e, Period, n;
@@ -88,8 +89,8 @@ void prepare_propagator(double* r0, double* v0, double t0, double t_final, doubl
   // User specified time vector for output
   int len;
   len = ceil(t_final/dt);
-  double time_out[len];
-  memset( time_out, 0.0, (len*sizeof(double)));
+  std::vector<double> time_out(len,0.0);
+  //memset( time_out, 0.0, (len*sizeof(double)));
   time_out[0] = t0;
   for (int i=1; i<len; i++){
     time_out[i] = time_out[i-1] + dt;

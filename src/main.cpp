@@ -14,10 +14,10 @@
 #include <time.h> 
 #include <errno.h>
 #include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
+//#include <pybind11/stl.h>
 
 
-int APyC(std::vector<double> r, std::vector<double> v, double t0, double tf){
+void APC(std::vector<double> r, std::vector<double> v, double t0, double tf){
   printf("%s",typeid(r).name());
   //Convert vectors to array since pybind wants vectors but the functions are coded for arrays
   double* r0 = &r[0];
@@ -114,8 +114,8 @@ int APyC(std::vector<double> r, std::vector<double> v, double t0, double tf){
 }
 
 
-PYBIND11_MODULE(APCexample, m) {
+PYBIND11_MODULE(APC, m) {
   m.doc() = "Test plugin for adaptive picard chebychev integrator";
   using namespace pybind11::literals;
-  m.def("APyC", &APyC, "r0"_a, "v0"_a, "t0"_a, "tf"_a, "takes satellite state around Earth and returns a textfile of the output");
+  m.def("Propagate", &APC, "takes satellite state around Earth and returns a textfile of the output");
 }

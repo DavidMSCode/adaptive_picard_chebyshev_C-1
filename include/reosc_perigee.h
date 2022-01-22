@@ -16,8 +16,8 @@
 #include <stdlib.h>
 #include "const.h"
 
-void reosc_perigee(double* X, double* V, double* times, double* Alpha, double* Beta,
-  double tf, double t_final, double* t_orig, int N, int M, int* k, int seg, int* prep_HS,
-  double tol, double* orb_end, double* tvec, double* r0, double* v0);
+void reosc_perigee(std::vector<double> X, std::vector<double> V, std::vector<double> times, std::vector<double> Alpha, std::vector<double> Beta,
+  double tf, double t_final, std::vector<double> t_orig, int N, int M, int* k, int seg, int* prep_HS,
+  double tol, double* orb_end, std::vector<double> tvec, double* r0, double* v0);
 
 #endif

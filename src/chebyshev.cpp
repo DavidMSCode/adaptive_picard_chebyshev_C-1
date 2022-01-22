@@ -22,12 +22,13 @@
 #include "lsq_chebyshev_fit.h"
 #include "c_functions.h"
 #include "const.h"
+#include <vector>
 
-void chebyshev(double s, int N, int M, int arg, double* T){
+void chebyshev(double s, int N, int M, int arg, std::vector<double> T){
 
   // Cosine Sample Points
-  double tau[(M+1)];
-  memset( tau, 0.0, ((M+1)*sizeof(double)));
+  std::vector<double> tau((M+1),0.0);
+  //memset( tau, 0.0, ((M+1)*sizeof(double)));
   for (int i=0; i<=M; i++){
     tau[i] = s*cos(i*C_PI/M);
   }

@@ -41,6 +41,7 @@
 #include "EGM2008.h"
 #include "lsq_chebyshev_fit.h"
 #include "matrix_loader.h"
+#include <vector>
 
 void polydegree_segments(double* r0,double* v0, double deg, double tol, double* Feval, int* seg, int* degree, double* tp, double* Period){
 
@@ -142,10 +143,10 @@ void polydegree_segments(double* r0,double* v0, double deg, double tol, double* 
     w2  = (tf1-t0)/2.0;
 
     // Loop through different values for N
-    double G[300*3];
-    memset( G, 0.0, ((300*3)*sizeof(double)));
-    double Gprev[300*3];
-    memset( Gprev, 0.0, ((300*3)*sizeof(double)));
+    std::vector<double> G(300*3,0.0);
+    //memset( G, 0.0, ((300*3)*sizeof(double)));
+    std::vector<double> Gprev(300*3,0.0);
+    //memset( Gprev, 0.0, ((300*3)*sizeof(double)));
     for (int j=0; j<=jmax; j++){
       N = Nvec[j];
 
@@ -186,7 +187,7 @@ void polydegree_segments(double* r0,double* v0, double deg, double tol, double* 
             G[ID2(cnt+1,3,N+1)] = dstate[5];
           }
         }
-        memset( Gprev, 0.0, ((300*3)*sizeof(double)));
+        std::fill(Gprev.begin(), Gprev.end(), 0.0);
         for (int cnt=0; cnt<=N; cnt++){
           Gprev[ID2(cnt+1,1,N+1)] = G[ID2(cnt+1,1,N+1)];
           Gprev[ID2(cnt+1,2,N+1)] = G[ID2(cnt+1,2,N+1)];
@@ -197,14 +198,14 @@ void polydegree_segments(double* r0,double* v0, double deg, double tol, double* 
       // Least Squares Acceleration Approximation
       int M;
       M = N;
-      double T[(M+1)*N];
-      memset( T, 0.0, (((M+1)*N)*sizeof(double)));
-      double A[N*(M+1)];
-      memset( A, 0.0, (N*(M+1)*sizeof(double)));
-      double gamma[N*3];
-      memset( gamma, 0.0, (N*3*sizeof(double)));
-      double Gapprox[(M+1)*3];
-      memset( Gapprox, 0.0, ((M+1)*3*sizeof(double)));
+      std::vector<double> T((M+1)*N,0.0);
+      //memset( T, 0.0, (((M+1)*N)*sizeof(double)));
+      std::vector<double> A(N*(M+1),0.0);
+      //memset( A, 0.0, (N*(M+1)*sizeof(double)));
+      std::vector<double> gamma(N*3,0.0);
+      //memset( gamma, 0.0, (N*3*sizeof(double)));
+      std::vector<double> Gapprox((M+1)*3,0.0);
+      //memset( Gapprox, 0.0, ((M+1)*3*sizeof(double)));
       lsq_chebyshev_fit(1.0,N-1,M,T,A);
       matmul(A,Gprev,gamma,N,M+1,3,N,M+1,N);
       matmul(T,gamma,Gapprox,M+1,N,3,M+1,N,M+1);

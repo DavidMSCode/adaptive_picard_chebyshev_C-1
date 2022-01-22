@@ -22,15 +22,16 @@
 #include "lsq_chebyshev_fit.h"
 #include "chebyshev.h"
 #include "c_functions.h"
+#include <vector>
 
-void lsq_chebyshev_fit(double s, int N, int M, double* T, double* A){
+void lsq_chebyshev_fit(double s, int N, int M, std::vector<double> T, std::vector<double> A){
 
   // Generate Chebyshev Polyniomials
   chebyshev(s,N,M,2,T);
 
   // Weight Matrix
-  double W[(M+1)*(M+1)];
-  memset( W, 0.0, ((M+1)*(M+1)*sizeof(double)));
+  std::vector<double> W((M+1)*(M+1),0.0);
+  //memset( W, 0.0, ((M+1)*(M+1)*sizeof(double)));
   for (int i=1; i<=M+1; i++){
     for (int j=1; j<=M+1; j++){
       if (i == j){
@@ -42,8 +43,8 @@ void lsq_chebyshev_fit(double s, int N, int M, double* T, double* A){
   W[ID2(M+1,M+1,M+1)] = 0.5;
 
   // V Matrix
-  double V[(N+1)*(N+1)];
-  memset( V, 0.0, ((N+1)*(N+1)*sizeof(double)));
+  std::vector<double> V((N+1)*(N+1),0.0);
+  //memset( V, 0.0, ((N+1)*(N+1)*sizeof(double)));
   for (int i=1; i<=N+1; i++){
     for (int j=1; j<=N+1; j++){
       if (i == j){
@@ -60,8 +61,8 @@ void lsq_chebyshev_fit(double s, int N, int M, double* T, double* A){
   }
 
   // T Transpose
-  double TT[(N+1)*(M+1)];
-  memset( TT, 0.0, ((N+1)*(M+1)*sizeof(double)));
+  std::vector<double> TT((N+1)*(M+1),0.0);
+  //memset( TT, 0.0, ((N+1)*(M+1)*sizeof(double)));
   for (int i=1; i<=N+1; i++){
     for (int j=1; j<=M+1; j++){
       TT[ID2(i,j,N+1)] = T[ID2(j,i,M+1)];
@@ -69,8 +70,8 @@ void lsq_chebyshev_fit(double s, int N, int M, double* T, double* A){
   }
 
   // Least Squares Operator
-  double TTW[(M+1)*(M+1)];
-  memset( TTW, 0.0, ((M+1)*(M+1)*sizeof(double)));
+  std::vector<double> TTW((M+1)*(M+1),0.0);
+  //memset( TTW, 0.0, ((M+1)*(M+1)*sizeof(double)));
   matmul(TT,W,TTW,N+1,M+1,M+1,N+1,M+1,N+1);
   matmul(V,TTW,A,N+1,N+1,M+1,N+1,N+1,N+1);
 

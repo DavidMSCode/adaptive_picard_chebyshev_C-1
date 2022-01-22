@@ -15,8 +15,10 @@
 #include <string.h>
 #include <stdlib.h>
 #include "const.h"
+#include <vector>
 
 void prepare_propagator(double* r0, double* v0, double t0, double t_final, double dt, double tp, double tol,
-  int N, int M, int seg, int* prep_HS, double* t_orig, double* tvec, double* P1, double* P2, double* T1, double* T2, double* A, double* Ta);
+  int N, int M, int seg, int* prep_HS, std::vector<double> t_orig, std::vector<double> tvec,
+  std::vector<double> P1, std::vector<double> P2, std::vector<double> T1, std::vector<double> T2, std::vector<double> A, std::vector<double> Ta);
 
 #endif

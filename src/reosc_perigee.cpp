@@ -31,26 +31,27 @@
 #include "reosc_perigee.h"
 #include "c_functions.h"
 #include "rv2elm.h"
+#include <vector>
 
-void reosc_perigee(double* X, double* V, double* times, double* Alpha, double* Beta,
-  double tf, double t_final, double* t_orig, int N, int M, int* k, int seg, int* prep_HS,
-  double tol, double* orb_end, double* tvec, double* r0, double* v0){
+void reosc_perigee(std::vector<double> X, std::vector<double> V, std::vector<double> times, std::vector<double> Alpha, std::vector<double> Beta,
+  double tf, double t_final, std::vector<double> t_orig, int N, int M, int* k, int seg, int* prep_HS,
+  double tol, double* orb_end, std::vector<double> tvec, double* r0, double* v0){
 
   // Initialization
   int peri_check = 0;
   double w1, w2, t1, t2, e, TAU_old, TAU, f_old, f_new, TAU_new, df_dtau, err;
   int itrf;
-  double TA[N+1];
-  memset( TA, 0.0, ((N+1)*sizeof(double)));
-  double TB[N];
-  memset( TB, 0.0, ((N)*sizeof(double)));
+  std::vector<double> TA(N+1,0.0);
+  //memset( TA, 0.0, ((N+1)*sizeof(double)));
+  std::vector<double> TB(N,0.0);
+  //memset( TB, 0.0, ((N)*sizeof(double)));
 
   // Compute True Anomaly (along trajectory)
   double r[3]      = {0.0};
   double v[3]      = {0.0};
   double elm[10]   = {0.0};
-  double fvec[M+1];
-  memset( fvec, 0.0, ((M+1)*sizeof(double)));
+  std::vector<double> fvec(M+1,0.0);
+  //memset( fvec, 0.0, ((M+1)*sizeof(double)));
   for (int i=1; i<=M+1; i++){
     for (int j=1; j<=3; j++){
       r[j-1] = X[ID2(i,j,M+1)];

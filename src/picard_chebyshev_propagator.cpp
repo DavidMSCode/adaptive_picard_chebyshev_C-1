@@ -44,11 +44,12 @@
 #include "FandG.h"
 #include "reosc_perigee.h"
 #include "c_functions.h"
+#include <vector>
 
 void picard_chebyshev_propagator(double* r0, double* v0, double t0, double t_final,double deg, double tol, double Period,
-   double* tvec, double* t_orig, int seg, int N, int M, int* prep_HS, int coeff_size, int soln_size, int* total_seg,
-   double* P1, double* P2, double* T1, double* T2, double* A, double* Ta, double* W1, double* W2, double* Feval,
-   double* ALPHA, double* BETA, double* segment_times){
+   std::vector<double> tvec, std::vector<double> t_orig, int seg, int N, int M, int* prep_HS, int coeff_size, int soln_size, int* total_seg,
+   std::vector<double> P1, std::vector<double> P2, std::vector<double> T1, std::vector<double> T2, std::vector<double> A, std::vector<double> Ta, std::vector<double> W1, std::vector<double> W2, double* Feval,
+   double* ALPHA, double* BETA, std::vector<double> segment_times){
 
   int loop    = 0;      // Break loop condition
   int k       = 0;      // Counter: segments per orbit
@@ -57,10 +58,10 @@ void picard_chebyshev_propagator(double* r0, double* v0, double t0, double t_fin
   int sz      = (int) ceil(1.1*t_final/Period)*seg;
   double w1, w2, tf;
 
-  double HotX[seg*(M+1)*3];
-  memset( HotX, 0.0, (seg*(M+1)*3*sizeof(double)));
-  double HotV[seg*(M+1)*3];
-  memset( HotV, 0.0, (seg*(M+1)*3*sizeof(double)));
+  std::vector<double> HotX(seg*(M+1)*3,0.0);
+  //memset( HotX, 0.0, (seg*(M+1)*3*sizeof(double)));
+  std::vector<double> HotV(seg*(M+1)*3,0.0);
+  //memset( HotV, 0.0, (seg*(M+1)*3*sizeof(double)));
 
   // PROPAGATION
   while (loop == 0){
@@ -86,18 +87,18 @@ void picard_chebyshev_propagator(double* r0, double* v0, double t0, double t_fin
     z0[0] = r0[0]; z0[1] = r0[1]; z0[2] = r0[2];
     z0[3] = v0[0]; z0[4] = v0[1]; z0[5] = v0[2];
 
-    double tau[M+1];
-    memset( tau, 0.0, ((M+1)*sizeof(double)));
-    double times[M+1];
-    memset( times, 0.0, ((M+1)*sizeof(double)));
-    double X[(M+1)*3];
-    memset( X, 0.0, ((M+1)*3*sizeof(double)));
-    double V[(M+1)*3];
-    memset( V, 0.0, ((M+1)*3*sizeof(double)));
-    double Beta[N*3];
-    memset( Beta, 0.0, (N*3*sizeof(double)));
-    double Alpha[(N+1)*3];
-    memset( Alpha, 0.0, ((N+1)*3*sizeof(double)));
+    std::vector<double> tau(M+1,0.0);
+    //memset( tau, 0.0, ((M+1)*sizeof(double)));
+    std::vector<double> times(M+1,0.0);
+    //memset( times, 0.0, ((M+1)*sizeof(double)));
+    std::vector<double> X((M+1)*3,0.0);
+    //memset( X, 0.0, ((M+1)*3*sizeof(double)));
+    std::vector<double> V((M+1)*3,0.0);
+    //memset( V, 0.0, ((M+1)*3*sizeof(double)));
+    std::vector<double> Beta(N*3,0.0);
+    //memset( Beta, 0.0, (N*3*sizeof(double)));
+    std::vector<double> Alpha((N+1)*3,0.0);
+    //memset( Alpha, 0.0, ((N+1)*3*sizeof(double)));
 
     // KEPLERIAN WARM START
     for (int cnt=0; cnt<=M; cnt++){
@@ -112,12 +113,14 @@ void picard_chebyshev_propagator(double* r0, double* v0, double t0, double t_fin
       V[ID2(cnt+1,3,M+1)] = z[5];
     }
     // Warm Start
-    double WSX[(M+1)*3];
-    memset( WSX, 0.0, ((M+1)*3*sizeof(double)));
-    double WSV[(M+1)*3];
-    memset( WSV, 0.0, ((M+1)*3*sizeof(double)));
-    memcpy(WSX,X,(M+1)*3*sizeof(double));
-    memcpy(WSV,V,(M+1)*3*sizeof(double));
+    std::vector<double> WSX((M+1)*3,0.0);
+    //memset( WSX, 0.0, ((M+1)*3*sizeof(double)));
+    std::vector<double> WSV((M+1)*3,0.0);
+    //memset( WSV, 0.0, ((M+1)*3*sizeof(double)));
+    WSX = X;
+    //memcpy(WSX,X,(M+1)*3*sizeof(double));
+    WSV = V;
+    //memcpy(WSV,V,(M+1)*3*sizeof(double));
 
     // HOT START (after 1+ orbits)
     // if (hot == 1){
