@@ -56,7 +56,7 @@ void Cmin( double* a, int size, double* min ){
 * \param[in] q Row dimension of B
 * \param[out] B Matrix Output (size m x q)
 */
-void matmul(std::vector<double> A, std::vector<double> B, std::vector<double> C,
+void matmul(std::vector<double> &A, std::vector<double> &B, std::vector<double> &C,
   const int m, const int n, const int q,
   const int ldA, const int ldB, const int ldC )
   {

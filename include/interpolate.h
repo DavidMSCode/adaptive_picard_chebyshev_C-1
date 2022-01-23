@@ -17,7 +17,7 @@
 #include "const.h"
 #include <vector>
 
-void interpolate(double* ALPHA, double* BETA, int soln_size, int coeff_size, int N, std::vector<double> seg_times,
-  std::vector<double> W1, std::vector<double> W2, double t0, double tf, double dt, int total_segs, double* Soln);
+void interpolate(double* ALPHA, double* BETA, int soln_size, int coeff_size, int N, std::vector<double> &seg_times,
+  std::vector<double> &W1, std::vector<double> &W2, double t0, double tf, double dt, int total_segs, double* Soln);
 
 #endif

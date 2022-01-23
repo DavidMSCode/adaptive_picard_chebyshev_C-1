@@ -39,8 +39,8 @@
 #include <vector>
 
 void prepare_propagator(double* r0, double* v0, double t0, double t_final, double dt, double tp, double tol,
-  int N, int M, int seg, int* prep_HS, std::vector<double> t_orig, std::vector<double> tvec,
-  std::vector<double> P1, std::vector<double> P2, std::vector<double> T1, std::vector<double> T2, std::vector<double> A, std::vector<double> Ta){
+  int N, int M, int seg, int* prep_HS, std::vector<double> &t_orig, std::vector<double> &tvec,
+  std::vector<double> &P1, std::vector<double> &P2, std::vector<double> &T1, std::vector<double> &T2, std::vector<double> &A, std::vector<double> &Ta){
 
   // Compute Keplerian Orbit Period
   double a, e, Period, n;

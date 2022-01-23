@@ -24,7 +24,7 @@
 #include "const.h"
 #include <vector>
 
-void chebyshev(double s, int N, int M, int arg, std::vector<double> T){
+void chebyshev(double s, int N, int M, int arg, std::vector<double> &T){
 
   // Cosine Sample Points
   std::vector<double> tau((M+1),0.0);

@@ -17,7 +17,7 @@
 #include "const.h"
 #include <vector>
 
-void picard_iteration(double* Xint, double* Vint, std::vector<double> X, std::vector<double> V, std::vector<double>times, int N, int M, double deg, int hot, double tol,
-  std::vector<double> P1, std::vector<double> P2, std::vector<double> T1, std::vector<double> T2, std::vector<double> A, double* Feval, std::vector<double> Alpha, std::vector<double> Beta);
+void picard_iteration(double* Xint, double* Vint, std::vector<double> &X, std::vector<double> &V, std::vector<double> &times, int N, int M, double deg, int hot, double tol,
+  std::vector<double> &P1, std::vector<double> &P2, std::vector<double> &T1, std::vector<double> &T2, std::vector<double> &A, double* Feval, std::vector<double> &Alpha, std::vector<double> &Beta);
 
 #endif

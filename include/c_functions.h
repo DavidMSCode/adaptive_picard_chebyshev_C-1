@@ -54,9 +54,9 @@ void matsub( double* a, double* b, int size, double* c );
 */
 
 #include <vector>
-void matmul( std::vector<double> A, std::vector<double> B, std::vector<double> C,
+void matmul( std::vector<double> &A, std::vector<double> &B, std::vector<double> &C,
   const int m, const int n, const int q,
-  const int ldA, const int ldB, const int ldC );
+  const int ldA, const int ldB, const int ldC);
 
 
 #endif

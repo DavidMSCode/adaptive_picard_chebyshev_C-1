@@ -28,7 +28,7 @@
 #include "const.h"
 #include <vector>
 
-void clenshaw_curtis_ivpII( int N, int M, std::vector<double> T2, std::vector<double> P2, std::vector<double> T1, std::vector<double> P1, std::vector<double> Ta, std::vector<double> A ){
+void clenshaw_curtis_ivpII( int N, int M, std::vector<double> &T2, std::vector<double> &P2, std::vector<double> &T1, std::vector<double> &P1, std::vector<double> &Ta, std::vector<double> &A ){
 
   // Least Squares Operator (A) [(N-1)x(M+1)]
   lsq_chebyshev_fit(-1.0,N-2,M,Ta,A);

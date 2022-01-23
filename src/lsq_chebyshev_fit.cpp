@@ -24,7 +24,7 @@
 #include "c_functions.h"
 #include <vector>
 
-void lsq_chebyshev_fit(double s, int N, int M, std::vector<double> T, std::vector<double> A){
+void lsq_chebyshev_fit(double s, int N, int M, std::vector<double> &T, std::vector<double> &A){
 
   // Generate Chebyshev Polyniomials
   chebyshev(s,N,M,2,T);
