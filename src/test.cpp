@@ -11,8 +11,9 @@
 #include <adaptive_picard_chebyshev.h>
 #include <c_functions.h>
 #include <EGM2008.h>
-#include <time.h> 
+#include <time.h>  
 #include <errno.h>
+#include <vector>
 
 FILE *fID;
 
@@ -20,10 +21,10 @@ int main(){
 
   // Initialize Input Variables
   // LEO
-  double r0[3] = {6500, 0.0, 0.0};                // Initial Position (km)
-  double v0[3] = {0.0, 7.90882662, 0.0};          // Initial Velocity (km/s)
-  double t0    = 0.0;                             // Initial Times (s)
-  double tf    = 10*5059.648765;                  // Final Time (s)
+  double r0[3] = {7000.0, 0.0, 0.0};                // Initial Position (km)
+  double v0[3] = {0.0, 8.003798178945150, 0.0};     // Initial Velocity (km/s)
+  double t0    = 0.0;                               // Initial Times (s)
+  double tf    = 3.0*7.121081577578024e+03;         // Final Time (s)
   // MEO
   // double r0[3] = {9000.0, 0.0, 0.0};                                // Initial Position (km)
   // double v0[3] = {0.0, 6.7419845635570, 1.806509319188210};         // Initial Velocity (km/s)
@@ -50,12 +51,12 @@ int main(){
   double tol   = 1.0e-15;                          // Tolerance
 
   // Initialize Output Variables
-  int soln_size = (int) (1.1*(tf/dt));
+  int soln_size = int(1.1*(tf/dt));
   if (soln_size == 1){
     soln_size = 2;
   }
-  double *Soln;
-  Soln = static_cast<double*>(calloc(soln_size*6,sizeof(double)));       // Position (km) & Velocity (km/s)
+  std::vector<double> Soln(soln_size*6,0.0);
+  //Soln = static_cast<double*>(calloc(soln_size*6,sizeof(double)));       // Position (km) & Velocity (km/s)
 
   double Feval[2] = {0.0};
 
@@ -70,7 +71,7 @@ int main(){
 
   // Number of function evaluations
   int total;
-  total = (int) ceil(Feval[0] + Feval[1]*pow(6.0,2)/pow(deg,2));
+  total = int(ceil(Feval[0] + Feval[1]*pow(6.0,2)/pow(deg,2)));
   printf("Func Evals: %i\t",total);
 
   // Save as text file [time r v H]
@@ -106,6 +107,6 @@ int main(){
   }
   printf("Hmax %1.16E\n",Hmax);
   fclose(fID);
-  free(Soln);
+  //free(Soln);
 
 }

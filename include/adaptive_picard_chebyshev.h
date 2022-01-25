@@ -16,6 +16,6 @@
 #include <stdlib.h>
 #include "const.h"
 
-void adaptive_picard_chebyshev(double* r0,double* v0, double t0, double tf, double dt, double deg, double tol, int soln_size, double* Soln, double* Feval);
+void adaptive_picard_chebyshev(double* r0,double* v0, double t0, double tf, double dt, double deg, double tol, int soln_size, double* Feval, std::vector<double> &Soln);
 
 #endif

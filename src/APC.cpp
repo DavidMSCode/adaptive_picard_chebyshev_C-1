@@ -8,8 +8,8 @@
 *                    via Adaptive Picard-Chebyshev Iteration: Applications in Astrodynamics", JGCD, 2016.
 */
 
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
+// #include <pybind11/pybind11.h>
+// #include <pybind11/stl.h>
 #include <adaptive_picard_chebyshev.h>
 #include <c_functions.h>
 #include <EGM2008.h>
@@ -53,12 +53,12 @@ void APC(std::vector<double> r, std::vector<double> v, double t0, double tf){
   double tol   = 1.0e-15;                          // Tolerance
 
   // Initialize Output Variables
-  int soln_size = (int) (1.1*(tf/dt));
+  int soln_size = int(1.1*(tf/dt));
   if (soln_size == 1){
     soln_size = 2;
   }
-  double *Soln;
-  Soln = static_cast<double*>(calloc(soln_size*6,sizeof(double)));       // Position (km) & Velocity (km/s)
+  std::vector<double> Soln(soln_size*6,0.0);
+  //Soln = static_cast<double*>(calloc(soln_size*6,sizeof(double)));       // Position (km) & Velocity (km/s)
 
   double Feval[2] = {0.0};
 
@@ -73,7 +73,7 @@ void APC(std::vector<double> r, std::vector<double> v, double t0, double tf){
 
   // Number of function evaluations
   int total;
-  total = (int) ceil(Feval[0] + Feval[1]*pow(6.0,2)/pow(deg,2));
+  total = int(ceil(Feval[0] + Feval[1]*pow(6.0,2)/pow(deg,2)));
   printf("Func Evals: %i\t",total);
 
   // Save as text file [time r v H]
@@ -109,12 +109,12 @@ void APC(std::vector<double> r, std::vector<double> v, double t0, double tf){
   }
   printf("Hmax %1.16E\n",Hmax);
   fclose(fID);
-  free(Soln);
+  //free(Soln);
 }
 
 
-PYBIND11_MODULE(APC, m) {
-  m.doc() = "Test plugin for adaptive picard chebychev integrator";
-  using namespace pybind11::literals;
-  m.def("Propagate", &APC, "takes satellite state around Earth and returns a textfile of the output");
-}
+// PYBIND11_MODULE(APC, m) {
+//   m.doc() = "Test plugin for adaptive picard chebychev integrator";
+//   using namespace pybind11::literals;
+//   m.def("Propagate", &APC, "takes satellite state around Earth and returns a textfile of the output");
+// }

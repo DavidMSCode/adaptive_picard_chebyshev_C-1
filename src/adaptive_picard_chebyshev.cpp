@@ -37,7 +37,7 @@
 #include "c_functions.h"
 #include <vector>
 
-void adaptive_picard_chebyshev(double* r0,double* v0, double t0, double tf, double dt, double deg, double tol, int soln_size, double* Feval, double* Soln){
+void adaptive_picard_chebyshev(double* r0,double* v0, double t0, double tf, double dt, double deg, double tol, int soln_size, double* Feval, std::vector<double> &Soln){
 
   /* 1. DETERMINE DEGREE/SEGMENTATION SCHEME
   Compute the polynomial degree and number of segments per orbit that will
@@ -50,7 +50,7 @@ void adaptive_picard_chebyshev(double* r0,double* v0, double t0, double tf, doub
 
   // Array size for coefficients and solution
   int coeff_size;
-  coeff_size = (int) (tf/Period + 1.0)*(seg+2.0)*(N+1);
+  coeff_size = int((tf/Period + 1.0)*(seg+2.0)*(N+1));
 
   /* 2. PREPARE PROPAGATOR
   Compute and store the begin and end times for each segment (based on true
@@ -79,12 +79,12 @@ void adaptive_picard_chebyshev(double* r0,double* v0, double t0, double tf, doub
   /* 3. PICARD-CHEBYSHEV PROPAGATOR
   Propagate from t0 to tf, iterating on each segment (Picard Iteration), until
   completion. */
-  double *ALPHA;
-  ALPHA = static_cast<double*>(calloc((coeff_size*3),sizeof(double)));
-  double *BETA;
-  BETA = static_cast<double*>(calloc((coeff_size*3),sizeof(double)));
+  std::vector<double>  ALPHA((coeff_size*3),0.0);
+  //ALPHA = static_cast<double*>(calloc((coeff_size*3),sizeof(double)));
+  std::vector<double>  BETA((coeff_size*3),0.0);
+  //BETA = static_cast<double*>(calloc((coeff_size*3),sizeof(double)));
   int total_seg = 0;
-  int sz = (int) ceil(1.1*tf/Period)*seg;
+  int sz = int(ceil(1.1*tf/Period)*seg);
   std::vector<double> segment_times(sz,0.0);
   //memset( segment_times, 0.0, (sz*sizeof(double)));
   std::vector<double> W1(sz,0.0);
@@ -97,8 +97,8 @@ void adaptive_picard_chebyshev(double* r0,double* v0, double t0, double tf, doub
   // /* 4. INTERPOLATE SOLUTION
   // The Chebyshev coefficients from each of the orbit segments are used to compute
   // the solution (position & velocity) at the user specified times. */
-  interpolate(ALPHA,BETA,soln_size,coeff_size,N,segment_times,W1,W2,t0,tf,dt,total_seg,Soln);
+  Soln = interpolate(ALPHA,BETA,soln_size,coeff_size,N,segment_times,W1,W2,t0,tf,dt,total_seg);
 
-  free(ALPHA);
-  free(BETA);
+  //free(ALPHA);
+  //free(BETA);
 }

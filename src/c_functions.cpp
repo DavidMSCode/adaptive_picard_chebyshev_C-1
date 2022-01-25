@@ -12,6 +12,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <vector>
+#include <iostream>
 // Cross Product in 3D
 // INPUT:  vector a & vector b
 // OUTPUT: vector c, (c = axb)
@@ -54,13 +55,14 @@ void Cmin( double* a, int size, double* min ){
 * \param[in] m Column dimension of A
 * \param[in] n Shared dimension of A and B
 * \param[in] q Row dimension of B
-* \param[out] B Matrix Output (size m x q)
+* \param[out] C Matrix Output (size m x q)
 */
-void matmul(std::vector<double> &A, std::vector<double> &B, std::vector<double> &C,
+std::vector<double> matmul(std::vector<double> A, std::vector<double> B,
   const int m, const int n, const int q,
-  const int ldA, const int ldB, const int ldC )
+  const int ldA, const int ldB)
   {
-
+    std::vector<double> C(m*q,0);
+    const int ldC = ldA;
     // Stand Alone Method
     double sum;
     int ii, jj, kk;
@@ -73,5 +75,5 @@ void matmul(std::vector<double> &A, std::vector<double> &B, std::vector<double> 
         C[ID2(ii+1,jj+1,ldC)] = sum;
       } // end for jj
     } // end for ii
-
+  return C;
   }

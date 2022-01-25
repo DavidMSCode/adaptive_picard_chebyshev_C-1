@@ -49,13 +49,13 @@
 void picard_chebyshev_propagator(double* r0, double* v0, double t0, double t_final,double deg, double tol, double Period,
    std::vector<double> &tvec, std::vector<double> &t_orig, int seg, int N, int M, int* prep_HS, int coeff_size, int soln_size, int* total_seg,
    std::vector<double> &P1, std::vector<double> &P2, std::vector<double> &T1, std::vector<double> &T2, std::vector<double> &A, std::vector<double> &Ta, std::vector<double> &W1, std::vector<double> &W2, double* Feval,
-   double* ALPHA, double* BETA, std::vector<double> &segment_times){
+   std::vector<double> &ALPHA, std::vector<double> &BETA, std::vector<double> &segment_times){
 
   int loop    = 0;      // Break loop condition
   int k       = 0;      // Counter: segments per orbit
   int hot     = 0;      // Hot start switch
   int seg_cnt = 0;      // Counter: total segments
-  int sz      = (int) ceil(1.1*t_final/Period)*seg;
+  int sz      = int(ceil(1.1*t_final/Period)*seg);
   double w1, w2, tf;
 
   std::vector<double> HotX(seg*(M+1)*3,0.0);

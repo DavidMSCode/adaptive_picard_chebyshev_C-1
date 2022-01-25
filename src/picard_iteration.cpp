@@ -69,13 +69,13 @@ void picard_iteration(double* Xint, double* Vint, std::vector<double> &X, std::v
   //memset( alpha, 0.0, ((N+1)*3*sizeof(double)));
   std::vector<double> kappa((N+1)*3,0.0);
   //memset( kappa, 0.0, ((N+1)*3*sizeof(double)));
-  std::vector<double> Xorig((M+1)*3,0.0);
+  std::vector<double> Xorig;
   //memset( Xorig, 0.0, ((M+1)*3*sizeof(double)));
-  std::vector<double> Vorig((M+1)*3,0.0);
+  std::vector<double> Vorig;
   //memset( Vorig, 0.0, ((M+1)*3*sizeof(double)));
-  std::vector<double> Xnew((M+1)*3,0.0);
+  std::vector<double> Xnew;
   //memset( Xnew, 0.0, ((M+1)*3*sizeof(double)));
-  std::vector<double> Vnew((M+1)*3,0.0);
+  std::vector<double> Vnew;
   //memset( Vnew, 0.0, ((M+1)*3*sizeof(double)));
   std::vector<double> xECEFp((M+1)*3,0.0);
   //memset( xECEFp, 0.0, ((M+1)*3*sizeof(double)));
@@ -115,12 +115,12 @@ void picard_iteration(double* Xint, double* Vint, std::vector<double> &X, std::v
     }
 
     // Velocity
-    std::vector<double> tmp1((N-1)*(M+1),0.0);
+    std::vector<double> tmp1;
     //memset( tmp1, 0.0, ((N-1)*(M+1)*sizeof(double)));
-    std::vector<double> tmp2((N-1)*(M+1),0.0);
+    std::vector<double> tmp2;
     //memset( tmp2, 0.0, ((N-1)*(M+1)*sizeof(double)));
-    matmul(A,G,tmp1,N-1,M+1,3,N-1,M+1,N-1);
-    matmul(P1,tmp1,tmp2,N,N-1,3,N,N-1,N);
+    tmp1 = matmul(A,G,N-1,M+1,3,N-1,M+1);
+    tmp2 = matmul(P1,tmp1,N,N-1,3,N,N-1);
     for (int i=1; i<=N; i++){
       for (int j=1; j<=3; j++){
         beta[ID2(i,j,N)] = w2*tmp2[ID2(i,j,N)];
@@ -129,12 +129,12 @@ void picard_iteration(double* Xint, double* Vint, std::vector<double> &X, std::v
         }
       }
     }
-    matmul(T1,beta,Vorig,M+1,N,3,M+1,N,M+1);
+    Vorig = matmul(T1,beta,M+1,N,3,M+1,N);
 
     // Position
-    std::vector<double> tmp3((N+1)*(M+1),0.0);
+    std::vector<double> tmp3;
     //memset( tmp3, 0.0, ((N+1)*(M+1)*sizeof(double)));
-    matmul(P2,beta,tmp3,N+1,N,3,N+1,N,N+1);
+    tmp3 = matmul(P2,beta,N+1,N,3,N+1,N);
     for (int i=1; i<=N+1; i++){
       for (int j=1; j<=3; j++){
         alpha[ID2(i,j,N+1)] = w2*tmp3[ID2(i,j,N+1)];
@@ -143,7 +143,7 @@ void picard_iteration(double* Xint, double* Vint, std::vector<double> &X, std::v
         }
       }
     }
-    matmul(T2,alpha,Xorig,M+1,N+1,3,M+1,N+1,M+1);
+    Xorig = matmul(T2,alpha,M+1,N+1,3,M+1,N+1);
 
     for (int i=1; i<=M+1; i++){
       for (int j=1; j<=3; j++){
@@ -166,12 +166,12 @@ void picard_iteration(double* Xint, double* Vint, std::vector<double> &X, std::v
     }
 
     // Linear Error Correction Velocity Coefficients
-    std::vector<double> tmp4((N-1)*(M+1),0.0);
+    std::vector<double> tmp4;
     //memset( tmp4, 0.0, ((N-1)*(M+1)*sizeof(double)));
-    std::vector<double> tmp5((N-1)*(M+1),0.0);
+    std::vector<double> tmp5;
     //memset( tmp5, 0.0, ((N-1)*(M+1)*sizeof(double)));
-    matmul(A,del_a,tmp4,N-1,M+1,3,N-1,M+1,N-1);
-    matmul(P1,tmp4,tmp5,N,N-1,3,N,N-1,N);
+    tmp4 = matmul(A,del_a,N-1,M+1,3,N-1,M+1);
+    tmp5 = matmul(P1,tmp4,N,N-1,3,N,N-1);
     for (int i=1; i<=N; i++){
       for (int j=1; j<=3; j++){
         gamma[ID2(i,j,N)] = w2*tmp5[ID2(i,j,N)];
@@ -187,12 +187,12 @@ void picard_iteration(double* Xint, double* Vint, std::vector<double> &X, std::v
         }
       }
     }
-    matmul(T1,Beta,Vnew,M+1,N,3,M+1,N,M+1);
+    Vnew = matmul(T1,Beta,M+1,N,3,M+1,N);
 
     // Corrected Position
-    std::vector<double> tmp6((N+1)*(M+1),0.0);
+    std::vector<double> tmp6;
     //memset( tmp6, 0.0, ((N+1)*(M+1)*sizeof(double)));
-    matmul(P2,gamma,tmp6,N+1,N,3,N+1,N,N+1);
+    tmp6 = matmul(P2,gamma,N+1,N,3,N+1,N);
     for (int i=1; i<=N+1; i++){
       for (int j=1; j<=3; j++){
         kappa[ID2(i,j,N+1)] = w2*tmp6[ID2(i,j,N+1)];
@@ -202,7 +202,7 @@ void picard_iteration(double* Xint, double* Vint, std::vector<double> &X, std::v
         }
       }
     }
-    matmul(T2,Alpha,Xnew,M+1,N+1,3,M+1,N+1,M+1);
+    Xnew = matmul(T2,Alpha,M+1,N+1,3,M+1,N+1);
 
     // Non-dimensional Error
     double tmp = 0.0;

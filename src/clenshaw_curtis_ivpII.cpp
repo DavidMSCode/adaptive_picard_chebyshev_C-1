@@ -87,9 +87,9 @@ void clenshaw_curtis_ivpII( int N, int M, std::vector<double> &T2, std::vector<d
     }
   }
 
-  std::vector<double> Sv(N*(N-1),0.0);
+  std::vector<double> Sv;
   //memset( Sv, 0.0, (N*(N-1)*sizeof(double)));
-  matmul(temp1,temp4,Sv,N,N,N-1,N,N,N);
+  Sv = matmul(temp1,temp4,N,N,N-1,N,N);
   Sv[ID2(1,1,N)] = 0.25;
   Sv[ID2(2,1,N)] = 1.0;
 
@@ -105,7 +105,7 @@ void clenshaw_curtis_ivpII( int N, int M, std::vector<double> &T2, std::vector<d
     }
   }
 
-  matmul(temp5,Sv,P1,N,N,N-1,N,N,N);  // [Nx(N-1)]
+  P1 = matmul(temp5,Sv,N,N,N-1,N,N);  // [Nx(N-1)]
 
   std::vector<double> temp6((N+1)*(N+1),0.0);
   //memset( temp6, 0.0, ((N+1)*(N+1)*sizeof(double)));
@@ -149,7 +149,7 @@ void clenshaw_curtis_ivpII( int N, int M, std::vector<double> &T2, std::vector<d
   // S Matrix for Position (Sp) [(N+1)xN]
   std::vector<double> Sp((N+1)*N,0.0);
   //memset( Sp, 0.0, ((N+1)*N*sizeof(double)));
-  matmul(temp6,temp9,Sp,N+1,N+1,N,N+1,N+1,N+1);
+  Sp = matmul(temp6,temp9,N+1,N+1,N,N+1,N+1);
   Sp[ID2(1,1,N+1)] = 0.25;
   Sp[ID2(2,1,N+1)] = 1.0;
 
@@ -165,7 +165,7 @@ void clenshaw_curtis_ivpII( int N, int M, std::vector<double> &T2, std::vector<d
     }
   }
 
-  matmul(temp10,Sp,P2,N+1,N+1,N,N+1,N+1,N+1);  // [(N+1)xN]
+  P2 = matmul(temp10,Sp,N+1,N+1,N,N+1,N+1);  // [(N+1)xN]
 
   // Chebyshev Matrix (interpolate "velocity" coefficients)
   chebyshev(-1.0,N-1,M,2,T1);    // arg4 = 2 -> Trig Cheby Poly

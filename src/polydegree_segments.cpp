@@ -202,13 +202,13 @@ void polydegree_segments(double* r0,double* v0, double deg, double tol, double* 
       //memset( T, 0.0, (((M+1)*N)*sizeof(double)));
       std::vector<double> A(N*(M+1),0.0);
       //memset( A, 0.0, (N*(M+1)*sizeof(double)));
-      std::vector<double> gamma(N*3,0.0);
+      std::vector<double> gamma;
       //memset( gamma, 0.0, (N*3*sizeof(double)));
-      std::vector<double> Gapprox((M+1)*3,0.0);
+      std::vector<double> Gapprox;
       //memset( Gapprox, 0.0, ((M+1)*3*sizeof(double)));
       lsq_chebyshev_fit(1.0,N-1,M,T,A);
-      matmul(A,Gprev,gamma,N,M+1,3,N,M+1,N);
-      matmul(T,gamma,Gapprox,M+1,N,3,M+1,N,M+1);
+      gamma = matmul(A,Gprev,N,M+1,3,N,M+1);
+      Gapprox = matmul(T,gamma,M+1,N,3,M+1,N);
 
       // Check magnitude of last few coefficients
       double max_gamma;

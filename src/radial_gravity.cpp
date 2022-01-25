@@ -161,7 +161,7 @@ void radial_gravity(double* X, double tol, double deg, double* grav){
         }
       }
       // Compute gravity degree
-      *grav = grav_surf[(ind-1)*14 + (int)col-1];
+      *grav = grav_surf[(ind-1)*14 + int(col-1)];
       if (*grav > deg){
         *grav = deg;
       }

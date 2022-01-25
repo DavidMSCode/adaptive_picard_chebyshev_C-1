@@ -72,7 +72,7 @@ void lsq_chebyshev_fit(double s, int N, int M, std::vector<double> &T, std::vect
   // Least Squares Operator
   std::vector<double> TTW((M+1)*(M+1),0.0);
   //memset( TTW, 0.0, ((M+1)*(M+1)*sizeof(double)));
-  matmul(TT,W,TTW,N+1,M+1,M+1,N+1,M+1,N+1);
-  matmul(V,TTW,A,N+1,N+1,M+1,N+1,N+1,N+1);
+  TTW =matmul(TT,W,N+1,M+1,M+1,N+1,M+1);
+  A = matmul(V,TTW,N+1,N+1,M+1,N+1,N+1);
 
 }
