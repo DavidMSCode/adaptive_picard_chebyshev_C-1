@@ -15,6 +15,7 @@
 #include <EGM2008.h>
 #include <time.h> 
 #include <errno.h>
+#include <vector>
 
 void APC(std::vector<double> r, std::vector<double> v, double t0, double tf){
   printf("%s",typeid(r).name());
