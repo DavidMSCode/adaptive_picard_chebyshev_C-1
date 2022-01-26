@@ -102,6 +102,12 @@ std::vector<double> interpolate(std::vector<double>  ALPHA, std::vector<double> 
     std::vector<double> v_interp;
     v_interp = matmul(Tv,Beta,cnt,N,3,cnt,N);
 
+    //sanity check
+    int check = ID2(cnt+prev_cnt,6,soln_size);
+    if (check >=soln_size*6){
+        std::cout << "exceeding soln size\n";
+    }
+
     // Velocity
     for (int p=1; p<=cnt; p++){
       Soln[ID2(p+prev_cnt,4,soln_size)] = v_interp[ID2(p,1,cnt)];

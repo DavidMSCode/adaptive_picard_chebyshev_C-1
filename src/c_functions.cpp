@@ -61,7 +61,11 @@ std::vector<double> matmul(std::vector<double> A, std::vector<double> B,
   const int m, const int n, const int q,
   const int ldA, const int ldB)
   {
-    std::vector<double> C(m*q,0);
+    int Ai;
+    int Bi;
+    double Av;
+    double Bv;
+    std::vector<double> C(m*q,0.0);
     const int ldC = ldA;
     // Stand Alone Method
     double sum;
@@ -70,6 +74,10 @@ std::vector<double> matmul(std::vector<double> A, std::vector<double> B,
       for ( jj=0; jj<q; jj++ ) {
         sum = 0.0;
         for ( kk=0; kk<n; kk++ ) {
+          Ai = ID2(ii+1,kk+1,ldA);
+          Bi = ID2(kk+1,jj+1,ldB);
+          Av = A[Ai];
+          Bv = B[Bi];
           sum += A[ID2(ii+1,kk+1,ldA)]*B[ID2(kk+1,jj+1,ldB)];
         }
         C[ID2(ii+1,jj+1,ldC)] = sum;

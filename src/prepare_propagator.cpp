@@ -37,6 +37,7 @@
 #include "rv2elm.h"
 #include "c_functions.h"
 #include <vector>
+#include <iostream>
 
 void prepare_propagator(double* r0, double* v0, double t0, double t_final, double dt, double tp, double tol,
   int N, int M, int seg, int* prep_HS, std::vector<double> &t_orig, std::vector<double> &tvec,
@@ -146,5 +147,5 @@ void prepare_propagator(double* r0, double* v0, double t0, double t_final, doubl
       A[ID2(j,k,N-1)] = temp6[ID2(j,k,Nmax+1)];   // Least Squares Operator
     }
   }
-
+std::cout << "finished loading matrices";
 }
