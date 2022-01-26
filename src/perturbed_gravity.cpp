@@ -297,9 +297,11 @@
    double dstate[6] = {0.0};
 
    for (int jj=0; jj<=5; jj++){
-     state[jj] = Xo[jj];
      if (jj>2){
        state[jj] = 0.0;
+     }
+     else{
+       state[jj] = Xo[jj];
      }
    }
 

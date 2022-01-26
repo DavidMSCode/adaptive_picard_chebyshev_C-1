@@ -13,7 +13,9 @@
                 "-I",
                 "../include",
                 "-arch",
-                "arm64"
+                "arm64",
+                "-fsanitize=address",
+                "-fsanitize="
             ],
             "options": {
                 "cwd": "${fileDirname}"

@@ -42,7 +42,7 @@ std::vector<double> interpolate(std::vector<double>  ALPHA, std::vector<double> 
   for (int ii=1; ii<=len; ii++){
     time_out[ii] = time_out[ii-1] + dt;
   }
-  int sz = int(ceil(1.1*tf/total_segs/dt));
+  int sz = int(ceil(1.5*tf/total_segs/dt));
   double test_time = 0.0;
   // Loop through all segments
   for (int i=1; i<=total_segs; i++){
@@ -132,7 +132,5 @@ std::vector<double> interpolate(std::vector<double>  ALPHA, std::vector<double> 
     }
     // printf("tfdt %f\t%f\n",tf,dt);
     prev_cnt = prev_cnt + cnt;  // Counter to track position in Soln array
-  }
-std::cout << "Got to end of interpolation\n";
-return Soln;
+  }return Soln;
 }

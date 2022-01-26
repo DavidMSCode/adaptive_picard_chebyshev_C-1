@@ -8,8 +8,8 @@
 *                    via Adaptive Picard-Chebyshev Iteration: Applications in Astrodynamics", JGCD, 2016.
 */
 
-// #include <pybind11/pybind11.h>
-// #include <pybind11/stl.h>
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 #include <adaptive_picard_chebyshev.h>
 #include <c_functions.h>
 #include <EGM2008.h>
@@ -113,8 +113,8 @@ void APC(std::vector<double> r, std::vector<double> v, double t0, double tf){
 }
 
 
-// PYBIND11_MODULE(APC, m) {
-//   m.doc() = "Test plugin for adaptive picard chebychev integrator";
-//   using namespace pybind11::literals;
-//   m.def("Propagate", &APC, "takes satellite state around Earth and returns a textfile of the output");
-// }
+PYBIND11_MODULE(APC, m) {
+  m.doc() = "Test plugin for adaptive picard chebychev integrator";
+  using namespace pybind11::literals;
+  m.def("Propagate", &APC, "takes satellite state around Earth and returns a textfile of the output");
+}
