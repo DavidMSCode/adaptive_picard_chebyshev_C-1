@@ -1,4 +1,4 @@
-# adaptive_picard_chebyshev pythonbind11
+# adaptive_picard_chebyshev pybind11
 This repository contains the python wrapper for the adaptive Picard-Chebyshev C++ code for propagating orbits around the Earth, using cartesian coordinates.
 
 ## Disclaimer
