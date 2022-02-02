@@ -22,7 +22,7 @@ int main(){
   // Initialize Input Variables
   // LEO
   double r0[3] = {7000.0, 0.0, 0.0};                // Initial Position (km)
-  double v0[3] = {0.0, 8.003798178945150, 0.0};     // Initial Velocity (km/s)
+  double v0[3] = {0.1, 8.003798178945150, 0.0};     // Initial Velocity (km/s)
   double t0    = 0.0;                               // Initial Times (s)
   double tf    = 3.0*7.121081577578024e+03;         // Final Time (s)
   // MEO

@@ -42,11 +42,10 @@ std::vector<double> interpolate(std::vector<double>  ALPHA, std::vector<double> 
   for (int ii=1; ii<=len; ii++){
     time_out[ii] = time_out[ii-1] + dt;
   }
-  int sz = int(ceil(1.5*tf/total_segs/dt));
   double test_time = 0.0;
   // Loop through all segments
   for (int i=1; i<=total_segs; i++){
-
+    int sz = int(ceil((seg_times[i]-seg_times[i-1])/dt));
     // Initialization
     std::vector<double> Beta(N*3);
     std::vector<double> Alpha((N+1)*3);

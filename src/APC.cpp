@@ -8,8 +8,8 @@
 *                    via Adaptive Picard-Chebyshev Iteration: Applications in Astrodynamics", JGCD, 2016.
 */
 
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
+ #include <pybind11/pybind11.h>
+ #include <pybind11/stl.h>
 #include <adaptive_picard_chebyshev.h>
 #include <c_functions.h>
 #include <EGM2008.h>
@@ -23,9 +23,9 @@ void APC(std::vector<double> r, std::vector<double> v, double t0, double tf){
   double* r0 = &r[0];
   double* v0 = &v[0];
   // Initialize Input Variables
-  // LEO
+  //LEO
   // double r0[3] = {6500, 0.0, 0.0};                               // Initial Position (km)
-  // double v0[3] = {0.0, 7.90882662, 0.0};                         // Initial Velocity (km/s)
+  // double v0[3] = {0.1, 7.90882662, 0.0};                         // Initial Velocity (km/s)
   // double t0    = 0.0;                                            // Initial Times (s)
   // double tf    = 10*5059.648765;                                 // Final Time (s)
   // MEO
