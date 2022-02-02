@@ -8,8 +8,8 @@
 *                    via Adaptive Picard-Chebyshev Iteration: Applications in Astrodynamics", JGCD, 2016.
 */
 
- #include <pybind11/pybind11.h>
- #include <pybind11/stl.h>
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 #include <adaptive_picard_chebyshev.h>
 #include <c_functions.h>
 #include <EGM2008.h>
@@ -17,7 +17,7 @@
 #include <errno.h>
 #include <vector>
 
-void APC(std::vector<double> r, std::vector<double> v, double t0, double tf){
+std::vector<std::vector<double>> APC(std::vector<double> r, std::vector<double> v, double t0, double tf){
   printf("%s",typeid(r).name());
   //Convert vectors to array since pybind wants vectors but the functions are coded for arrays
   double* r0 = &r[0];
@@ -65,8 +65,9 @@ void APC(std::vector<double> r, std::vector<double> v, double t0, double tf){
 
   // Call Adaptive Picard Chebyshev Integrator
   clock_t startTime = clock();
+  std::vector<std::vector<double>> states;
   for (int tt=0; tt<=1; tt++){
-    adaptive_picard_chebyshev(r0,v0,t0,tf,dt,deg,tol,soln_size,Feval,Soln);
+    states = adaptive_picard_chebyshev(r0,v0,t0,tf,dt,deg,tol,soln_size,Feval,Soln);
   }
   clock_t endTime = clock();
   float elapsedTime = ((float) (endTime - startTime))/CLOCKS_PER_SEC/(1.0);
@@ -111,6 +112,7 @@ void APC(std::vector<double> r, std::vector<double> v, double t0, double tf){
   printf("Hmax %1.16E\n",Hmax);
   fclose(fID);
   //free(Soln);
+  return states;
 }
 
 
