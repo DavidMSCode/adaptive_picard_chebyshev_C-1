@@ -17,7 +17,7 @@
 #include <errno.h>
 #include <vector>
 
-std::vector<std::vector<double>> APC(std::vector<double> r, std::vector<double> v, double t0, double tf){
+std::vector<std::vector<double> > APC(std::vector<double> r, std::vector<double> v, double t0, double tf){
   printf("%s",typeid(r).name());
   //Convert vectors to array since pybind wants vectors but the functions are coded for arrays
   double* r0 = &r[0];
@@ -65,7 +65,7 @@ std::vector<std::vector<double>> APC(std::vector<double> r, std::vector<double> 
 
   // Call Adaptive Picard Chebyshev Integrator
   clock_t startTime = clock();
-  std::vector<std::vector<double>> states;
+  std::vector<std::vector<double> > states;
   for (int tt=0; tt<=1; tt++){
     states = adaptive_picard_chebyshev(r0,v0,t0,tf,dt,deg,tol,soln_size,Feval,Soln);
   }

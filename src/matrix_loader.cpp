@@ -23,12 +23,12 @@ double arr_A[(Nmax-Nmin+1)][(Nmax+1)*(Nmax+1)];
 void matrix_loader(){
 
   // Open Files
-  FILE* fT2 = fopen("../matrices/T2_matrices.bin","rb");
-  FILE* fP2 = fopen("../matrices/P2_matrices.bin","rb");
-  FILE* fT1 = fopen("../matrices/T1_matrices.bin","rb");
-  FILE* fP1 = fopen("../matrices/P1_matrices.bin","rb");
-  FILE* fTa = fopen("../matrices/Ta_matrices.bin","rb");
-  FILE* fA  = fopen("../matrices/A_matrices.bin","rb");
+  FILE* fT2 = fopen("matrices/T2_matrices.bin","rb");
+  FILE* fP2 = fopen("matrices/P2_matrices.bin","rb");
+  FILE* fT1 = fopen("matrices/T1_matrices.bin","rb");
+  FILE* fP1 = fopen("matrices/P1_matrices.bin","rb");
+  FILE* fTa = fopen("matrices/Ta_matrices.bin","rb");
+  FILE* fA  = fopen("matrices/A_matrices.bin","rb");
 
   // Confirm Opening
   if ( !fT2 ){

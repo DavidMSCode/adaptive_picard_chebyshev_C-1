@@ -152,7 +152,7 @@ void radial_gravity(double* X, double tol, double deg, double* grav){
       col = fabs(log10(tol)+1);
 
       // Compute radius & corresponding index
-      int ind;
+      int ind=1;
       double R;
       R = sqrt(pow(X[0],2) + pow(X[1],2) + pow(X[2],2))/DU;
       for (int j=0; j<100; j++){

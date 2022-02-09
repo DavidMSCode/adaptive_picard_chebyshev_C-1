@@ -45,8 +45,9 @@
 #include "reosc_perigee.h"
 #include "c_functions.h"
 #include <vector>
+#include <iostream>
 
-std::vector<std::vector<double>> picard_chebyshev_propagator(double* r0, double* v0, double t0, double t_final,double deg, double tol, double Period,
+std::vector<std::vector<double> > picard_chebyshev_propagator(double* r0, double* v0, double t0, double t_final,double deg, double tol, double Period,
    std::vector<double> &tvec, std::vector<double> &t_orig, int seg, int N, int M, int* prep_HS, int coeff_size, int soln_size, int* total_seg,
    std::vector<double> &P1, std::vector<double> &P2, std::vector<double> &T1, std::vector<double> &T2, std::vector<double> &A, std::vector<double> &Ta, std::vector<double> &W1, std::vector<double> &W2, double* Feval,
    std::vector<double> &ALPHA, std::vector<double> &BETA, std::vector<double> &segment_times){
@@ -57,14 +58,22 @@ std::vector<std::vector<double>> picard_chebyshev_propagator(double* r0, double*
   int seg_cnt = 0;      // Counter: total segments
   //int sz      = int(ceil(1.1*t_final/Period)*seg);
   double w1, w2, tf;
+  //store original initial conditions
+  double r0_orig[3];
+  double v0_orig[3];
+  for (int i=0;i<3;i++){
+    r0_orig[i] = r0[i];
+    v0_orig[i] = v0[i];
+   }
+
 
   std::vector<double> HotX(seg*(M+1)*3,0.0);
   //memset( HotX, 0.0, (seg*(M+1)*3*sizeof(double)));
   std::vector<double> HotV(seg*(M+1)*3,0.0);
   //memset( HotV, 0.0, (seg*(M+1)*3*sizeof(double)));
-  std::vector<double> Xpoints((N+1)*3,0.0);
+  std::vector<double> Xpoints(coeff_size*3,0.0);
   //memset( Beta, 0.0, (N*3*sizeof(double)));
-  std::vector<double> Vpoints((N+1)*3,0.0);
+  std::vector<double> Vpoints(coeff_size*3,0.0);
   //memset( Alpha, 0.0, ((N+1)*3*sizeof(double)));
 
   // PROPAGATION
@@ -211,7 +220,14 @@ std::vector<std::vector<double>> picard_chebyshev_propagator(double* r0, double*
     seg_cnt = seg_cnt + 1;
 
   }
+//Restore initial conditions
+for (int i=0;i<3;i++){
+    r0[i] = r0_orig[i];
+    v0[i] = v0_orig[i];
+   }
+   
   *total_seg = seg_cnt;
-  std::vector<std::vector<double>> states {Xpoints,Vpoints};
+  std::vector<std::vector<double> > states = {Xpoints,Vpoints};
   return states;
+  std::cout << "finished propagating";
 }

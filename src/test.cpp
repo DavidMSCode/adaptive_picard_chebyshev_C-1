@@ -22,9 +22,9 @@ int main(){
   // Initialize Input Variables
   // LEO
   double r0[3] = {6500.0, 0.0, 0.0};                // Initial Position (km)
-  double v0[3] = {0.0,  7.90882662, 0.0};     // Initial Velocity (km/s)
+  double v0[3] = {2,  7.90882662, 0.0};     // Initial Velocity (km/s)
   double t0    = 0.0;                               // Initial Times (s)
-  double tf    = 1.*5059.648765;         // Final Time (s)
+  double tf    = 1.2*5059.648765;         // Final Time (s)
   // MEO
   // double r0[3] = {9000.0, 0.0, 0.0};                                // Initial Position (km)
   // double v0[3] = {0.0, 6.7419845635570, 1.806509319188210};         // Initial Velocity (km/s)
@@ -62,7 +62,7 @@ int main(){
 
   // Call Adaptive Picard Chebyshev Integrator
   clock_t startTime = clock();
-  std::vector<std::vector<double>> states;
+  std::vector<std::vector<double> > states;
   for (int tt=0; tt<=1; tt++){
     states = adaptive_picard_chebyshev(r0,v0,t0,tf,dt,deg,tol,soln_size,Feval,Soln);
   }
