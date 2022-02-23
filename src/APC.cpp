@@ -66,9 +66,9 @@ std::vector<std::vector<double> > APC(std::vector<double> r, std::vector<double>
   // Call Adaptive Picard Chebyshev Integrator
   clock_t startTime = clock();
   std::vector<std::vector<double> > states;
-  for (int tt=0; tt<=1; tt++){
-    states = adaptive_picard_chebyshev(r0,v0,t0,tf,dt,deg,tol,soln_size,Feval,Soln);
-  }
+  // for (int tt=0; tt<=1; tt++){
+  states = adaptive_picard_chebyshev(r0,v0,t0,tf,dt,deg,tol,soln_size,Feval,Soln);
+  // }
   clock_t endTime = clock();
   float elapsedTime = ((float) (endTime - startTime))/CLOCKS_PER_SEC/(1.0);
   printf("Elapsed time: %f s\t",elapsedTime);
