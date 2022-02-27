@@ -8,8 +8,13 @@
 #objects
 obj/*
 build/*
+build
 
 #executables
 bin/*
 !bin/matrices
 !bin/Test.ipynb
+
+#external libraries
+extern/*
+extern

@@ -1,54 +1,27 @@
 /*
-*  AUTHORS:          Robyn Woollands (robyn.woollands@gmail.com)
-*  DATE WRITTEN:     May 2017
-*  LAST MODIFIED:    Aug 2021
-*  AFFILIATION:      Department of Aerospace Engineering, Texas A&M University, College Station, TX
-*  DESCRIPTION:      Set up an Adaptive-Picard-Chebyshev integration test case
+*  AUTHORS:          David Stanley (davidms4@illinois.edu)
+*  DATE WRITTEN:     Feb 2022
+*  LAST MODIFIED:    Feb 2022
+*  AFFILIATION:      Department of Aerospace Engineering, University of Illincois Champaign-Urbana
+*  DESCRIPTION:      Methods that are acessible from python and binding code
 *  REFERENCE:        Woollands, R., and Junkins, J., "Nonlinear Differential Equation Solvers
 *                    via Adaptive Picard-Chebyshev Iteration: Applications in Astrodynamics", JGCD, 2016.
 */
 
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
 #include <adaptive_picard_chebyshev.h>
 #include <c_functions.h>
 #include <EGM2008.h>
 #include <time.h> 
 #include <errno.h>
 #include <vector>
+#include <Orbit.h>
+#include <APC.h>
 
-std::vector<std::vector<double> > APC(std::vector<double> r, std::vector<double> v, double t0, double tf){
+std::vector<std::vector<double> > PropagateICs(std::vector<double> r, std::vector<double> v, double t0, double tf){
   printf("%s",typeid(r).name());
   //Convert vectors to array since pybind wants vectors but the functions are coded for arrays
   double* r0 = &r[0];
   double* v0 = &v[0];
-  // Initialize Input Variables
-  //LEO
-  // double r0[3] = {6500, 0.0, 0.0};                               // Initial Position (km)
-  // double v0[3] = {0.1, 7.90882662, 0.0};                         // Initial Velocity (km/s)
-  // double t0    = 0.0;                                            // Initial Times (s)
-  // double tf    = 10*5059.648765;                                 // Final Time (s)
-  // MEO
-  // r0[3] = {9000.0, 0.0, 0.0};                                // Initial Position (km)
-  // v0[3] = {0.0, 6.7419845635570, 1.806509319188210};         // Initial Velocity (km/s)
-  // t0    = 0.0;                                               // Initial Times (s)
-  // tf    = 3.0*9.952014050491189e+03;                         // Final Time (s)
-  // GEO
-  // double r0[3] = {42000, 0.0, 0.0};                              // Initial Position (km)
-  // double v0[3] = {0.0, 3.080663355435613, 0.0};                  // Initial Velocity (km/s)
-  // double t0    = 0.0;                                            // Initial Times (s)
-  // double tf    = 3.0*8.566135031791795e+04;                      // Final Time (s)
-  // GTO
-  // double r0[3] = {8064, 0.0, 0.0};                               // Initial Position (km)
-  // double v0[3] = {0.0, 9.112725097814229, 0.0};                  // Initial Velocity (km/s)
-  // double t0    = 0.0;                                            // Initial Times (s)
-  // double tf    = 3.0*3.981179798339227e+04;                      // Final Time (s)
-  // Molniya
-  // double r0[3] = {7435.12, 0.0, 0.0};                            // Initial Position (km)
-  // double v0[3] = {0.0, 4.299654205302486, 8.586211043023614};    // Initial Velocity (km/s)
-  // double t0    = 0.0;                                            // Initial Times (s)
-  // double tf    = 5.0*4.306316113361824e+04;                      // Final Time (s)
-  FILE *fID;
   double dt    = 30.0;                             // Soution Output Time Interval (s)
   double deg   = 70.0;                             // Gravity Degree (max 100)
   double tol   = 1.0e-15;                          // Tolerance
@@ -79,20 +52,19 @@ std::vector<std::vector<double> > APC(std::vector<double> r, std::vector<double>
   printf("Func Evals: %i\t",total);
 
   // Save as text file [time r v H]
+  std::vector<std::vector<double> > States(6);
   double state[6] = {0.0};
+  std::vector<double> Hs;
+  std::vector<double> Ts;
   double H    = 0.0;
   double H0   = 0.0;
   double Hmax = 0.0;
-  fID = fopen((const char*)"output.txt",(const char*)"w");
-  if (fID == NULL) {
-    printf ("Error %d opening input file\n", errno);
-    exit (1);
-}
+
   double t_curr = t0;
   for (int i=1; i<=soln_size; i++){
-    fprintf(fID,"%1.16E\t", t_curr);
+    Ts.push_back(t_curr);
     for (int j=1; j<=6; j++){
-      fprintf(fID,"%1.16E\t",Soln[ID2(i,j,soln_size)]);
+      States[j-1].push_back(Soln[ID2(i,j,soln_size)]);
       state[j-1] = Soln[ID2(i,j,soln_size)];
     }
     jacobiIntegral(t_curr,state,&H,deg);
@@ -102,22 +74,28 @@ std::vector<std::vector<double> > APC(std::vector<double> r, std::vector<double>
     if (fabs((H-H0)/H0) > Hmax){
       Hmax = fabs((H-H0)/H0);
     }
-    fprintf(fID,"%1.16E\t",fabs((H-H0)/H0));
+    Hs.push_back(fabs((H-H0)/H0));
     t_curr = t_curr + dt;
     if (t_curr > tf){
       break;
     }
-    fprintf(fID,"\n");
   }
   printf("Hmax %1.16E\n",Hmax);
-  fclose(fID);
+  //Assemble solution vector
+  std::vector<std::vector<double> > Solution;
+  Solution.push_back(Ts);
+  for(int i=0; i<=5; i++){
+    Solution.push_back(States[i]);
+  }
+  Solution.push_back(Hs);
   //free(Soln);
-  return states;
+  return Solution;
 }
 
-
-PYBIND11_MODULE(APC, m) {
-  m.doc() = "Test plugin for adaptive picard chebychev integrator";
-  using namespace pybind11::literals;
-  m.def("Propagate", &APC, "takes satellite state around Earth and returns a textfile of the output");
+class Orbit PropagateOrbit(std::vector<double> r, std::vector<double> v, double t0, double tf){
+  std::vector<std::vector<double> > solution;
+  solution = PropagateICs(r,v,t0,tf);
+  Orbit orbit(solution);
+  return orbit;
 }
+
