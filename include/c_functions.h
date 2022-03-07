@@ -19,7 +19,9 @@
 // OUTPUT: vector c, (c = axb)
 void cross_product_3D( double* a, double* b, double* c );
 
-void Cnorm( double* a, double* n);
+void Cnorm( double* a, double &n);
+
+double Cdot(double* a, double* b);
 
 void find_less(double* a, double l, int len, double* ind);
 

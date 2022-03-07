@@ -44,14 +44,14 @@
 #include "FandG.h"
 #include "reosc_perigee.h"
 #include "c_functions.h"
+#include <Orbit.h>
 #include <vector>
 #include <iostream>
 
 std::vector<std::vector<double> > picard_chebyshev_propagator(double* r0, double* v0, double t0, double t_final,double deg, double tol, double Period,
    std::vector<double> &tvec, std::vector<double> &t_orig, int seg, int N, int M, int* prep_HS, int coeff_size, int soln_size, int* total_seg,
    std::vector<double> &P1, std::vector<double> &P2, std::vector<double> &T1, std::vector<double> &T2, std::vector<double> &A, std::vector<double> &Ta, std::vector<double> &W1, std::vector<double> &W2, double* Feval,
-   std::vector<double> &ALPHA, std::vector<double> &BETA, std::vector<double> &segment_times){
-
+   std::vector<double> &ALPHA, std::vector<double> &BETA, std::vector<double> &segment_times, Orbit &orb){
   int loop    = 0;      // Break loop condition
   int k       = 0;      // Counter: segments per orbit
   int hot     = 0;      // Hot start switch
@@ -149,13 +149,15 @@ std::vector<std::vector<double> > picard_chebyshev_propagator(double* r0, double
     // }
 
     // PICARD ITERATION
-    picard_iteration(r0,v0,X,V,times,N,M,deg,hot,tol,P1,P2,T1,T2,A,Feval,Alpha,Beta);
+    picard_iteration(r0,v0,X,V,times,N,M,deg,hot,tol,P1,P2,T1,T2,A,Feval,Alpha,Beta,orb);
 
     // Loop exit condition
     if (fabs(tf - t_final)/tf < 1e-12){
       loop = 1;
     }
-
+    if(orb.suborbital){
+      loop=1;
+    }
     // Prepare Hot Start
     // if (*prep_HS == -1){
     //   for (int i=1; i<=M+1; i++){

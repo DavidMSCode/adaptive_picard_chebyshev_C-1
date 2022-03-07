@@ -2,7 +2,7 @@
 *  AUTHORS:          David Stanley (davidms4@illinois.edu)
 *  DATE WRITTEN:     Feb 2022
 *  LAST MODIFIED:    Feb 2022
-*  AFFILIATION:      Department of Aerospace Engineering, University of Illincois Champaign-Urbana
+*  AFFILIATION:      Department of Aerospace Engineering, University of Illinois Urbana-Champaign
 *  DESCRIPTION:      Pybind11 code for making methods that are acessible from python.
 *  REFERENCE:        Woollands, R., and Junkins, J., "Nonlinear Differential Equation Solvers
 *                    via Adaptive Picard-Chebyshev Iteration: Applications in Astrodynamics", JGCD, 2016.

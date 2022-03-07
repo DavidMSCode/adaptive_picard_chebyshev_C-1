@@ -21,6 +21,22 @@ void cross_product_3D( double* a, double* b, double* c ){
   c[1] = a[2]*b[0] - a[0]*b[2];
   c[2] = a[0]*b[1] - a[1]*b[0];
 }
+// Dot Product in 3D
+// INPUT:  vector a & vector b
+// OUTPUT: dot product
+double Cdot(double* a, double* b){
+  double product = 0.0;
+  for(int i=0;i<3;i++){
+    product+= a[i]*b[i];
+  }
+  return product;
+}
+// Length of 3d vector
+// INPUT:  vector a
+// OUTPUT: n
+void Cnorm(double*a, double &n){
+  n = sqrt(pow(a[0],2)+pow(a[1],2)+pow(a[2],2));
+}
 
 // Maximum of a 2D array
 // INPUT: vector a, size of vector a

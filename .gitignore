@@ -16,5 +16,4 @@ bin/*
 !bin/Test.ipynb
 
 #external libraries
-extern/*
-extern
+extern/cspice/*

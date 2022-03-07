@@ -42,13 +42,16 @@
 #include "ecef2eci.h"
 #include "perturbed_gravity.h"
 #include "picard_error_feedback.h"
-
+#include <perturbations.h>
+#include <Orbit.h>
 #include "EGM2008.h"
 #include <vector>
 void picard_iteration(double* Xint, double* Vint, std::vector<double> &X, std::vector<double> &V, std::vector<double> &times, int N, int M, double deg, int hot, double tol,
-  std::vector<double> &P1, std::vector<double> &P2, std::vector<double> &T1, std::vector<double> &T2, std::vector<double> &A, double* Feval, std::vector<double> &Alpha, std::vector<double> &Beta){
-
+  std::vector<double> &P1, std::vector<double> &P2, std::vector<double> &T1, std::vector<double> &T2, std::vector<double> &A, double* Feval, std::vector<double> &Alpha, std::vector<double> &Beta, Orbit &orb){
+  
   // Initialization
+  bool suborbital = false;
+  double alt = 0.0;
   double xI[3]        = {0.0};
   double vI[3]        = {0.0};
   double xECEF[3]     = {0.0};
@@ -58,31 +61,22 @@ void picard_iteration(double* Xint, double* Vint, std::vector<double> &X, std::v
   double del_X[3]     = {0.0};
   double del_aECEF[3] = {0.0};
   double del_aECI[3]  = {0.0};
+  double drag_aECEF[3] = {0.0};
+  double SRP_aECI[3] = {0.0};
+  double third_body_aECI[3] = {0.0};
 
   std::vector<double> G((M+1)*3,0.0);
-  //memset( G, 0.0, ((M+1)*3*sizeof(double)));
   std::vector<double> beta(N*3,0.0);
-  //memset( beta, 0.0, (N*3*sizeof(double)));
   std::vector<double> gamma(N*3,0.0);
-  //memset( gamma, 0.0, (N*3*sizeof(double)));
   std::vector<double> alpha((N+1)*3,0.0);
-  //memset( alpha, 0.0, ((N+1)*3*sizeof(double)));
   std::vector<double> kappa((N+1)*3,0.0);
-  //memset( kappa, 0.0, ((N+1)*3*sizeof(double)));
   std::vector<double> Xorig;
-  //memset( Xorig, 0.0, ((M+1)*3*sizeof(double)));
   std::vector<double> Vorig;
-  //memset( Vorig, 0.0, ((M+1)*3*sizeof(double)));
   std::vector<double> Xnew;
-  //memset( Xnew, 0.0, ((M+1)*3*sizeof(double)));
   std::vector<double> Vnew;
-  //memset( Vnew, 0.0, ((M+1)*3*sizeof(double)));
   std::vector<double> xECEFp((M+1)*3,0.0);
-  //memset( xECEFp, 0.0, ((M+1)*3*sizeof(double)));
   std::vector<double> xECIp((M+1)*3,0.0);
-  //memset( xECIp, 0.0, ((M+1)*3*sizeof(double)));
   std::vector<double> del_a((M+1)*3,0.0);
-  //memset( del_a, 0.0, ((M+1)*3*sizeof(double)));
 
   int itr, MaxIt;
   double err, w2;
@@ -96,29 +90,50 @@ void picard_iteration(double* Xint, double* Vint, std::vector<double> &X, std::v
   }
 
   while(err > tol){
-
+    suborbital = false;
     for (int i=1; i<=M+1; i++){
+
       for (int j=1; j<=3; j++){
         xI[j-1] = X[ID2(i,j,M+1)];
         vI[j-1] = V[ID2(i,j,M+1)];
+      }
+      // Exit loop early if orbit has crashed
+      if (!suborbital){
+        alt = sqrt(pow(xI[0],2)+pow(xI[1],2)+pow(xI[2],2))-C_Req;
+        if (alt<0){
+          suborbital=true;
+        }
       }
       // Convert from ECI to ECEF
       eci2ecef(times[i-1],xI,vI,xECEF,vECEF);
       // Compute Variable Fidelity Gravity
       perturbed_gravity(times[i-1],xECEF,err,i,M,deg,hot,aECEF,tol,&itr,Feval);
+      //Calculate acceleration from drag
+      Perturbed_Drag(xECEF, vECEF, orb, drag_aECEF);
+
+      //sum pertubed gravity and drag accelerations
+      for(int k=0;k<3;k++){
+        aECEF[k] = aECEF[k]+drag_aECEF[k];
+      }
+
       // Convert from ECEF to ECI
       ecef2eci(times[i-1],aECEF,aECI);
+      //calculate SRP and Third Body
+      Perturbed_SRP(times[i-1], xI, orb, SRP_aECI);
+      Perturbed_three_body(times[i-1], xI, orb, third_body_aECI);
+      //Add perturbations to acceleration.
+      for(int k=0;k<3;k++){
+        aECI[k] = aECI[k] + SRP_aECI[k] + third_body_aECI[k];
+      }
       for (int j=1; j<=3; j++){
         G[ID2(i,j,M+1)]      = aECI[j-1];
         xECIp[ID2(i,j,M+1)] = xI[j-1];
       }
     }
-
+    
     // Velocity
     std::vector<double> tmp1;
-    //memset( tmp1, 0.0, ((N-1)*(M+1)*sizeof(double)));
     std::vector<double> tmp2;
-    //memset( tmp2, 0.0, ((N-1)*(M+1)*sizeof(double)));
     tmp1 = matmul(A,G,N-1,M+1,3,N-1,M+1);
     tmp2 = matmul(P1,tmp1,N,N-1,3,N,N-1);
     for (int i=1; i<=N; i++){
@@ -133,7 +148,6 @@ void picard_iteration(double* Xint, double* Vint, std::vector<double> &X, std::v
 
     // Position
     std::vector<double> tmp3;
-    //memset( tmp3, 0.0, ((N+1)*(M+1)*sizeof(double)));
     tmp3 = matmul(P2,beta,N+1,N,3,N+1,N);
     for (int i=1; i<=N+1; i++){
       for (int j=1; j<=3; j++){
@@ -167,9 +181,7 @@ void picard_iteration(double* Xint, double* Vint, std::vector<double> &X, std::v
 
     // Linear Error Correction Velocity Coefficients
     std::vector<double> tmp4;
-    //memset( tmp4, 0.0, ((N-1)*(M+1)*sizeof(double)));
     std::vector<double> tmp5;
-    //memset( tmp5, 0.0, ((N-1)*(M+1)*sizeof(double)));
     tmp4 = matmul(A,del_a,N-1,M+1,3,N-1,M+1);
     tmp5 = matmul(P1,tmp4,N,N-1,3,N,N-1);
     for (int i=1; i<=N; i++){
@@ -191,7 +203,6 @@ void picard_iteration(double* Xint, double* Vint, std::vector<double> &X, std::v
 
     // Corrected Position
     std::vector<double> tmp6;
-    //memset( tmp6, 0.0, ((N+1)*(M+1)*sizeof(double)));
     tmp6 = matmul(P2,gamma,N+1,N,3,N+1,N);
     for (int i=1; i<=N+1; i++){
       for (int j=1; j<=3; j++){
@@ -225,15 +236,16 @@ void picard_iteration(double* Xint, double* Vint, std::vector<double> &X, std::v
     // Update
     X = Xnew;
     V = Vnew;
-    //memcpy(X,Xnew,(M+1)*3*sizeof(double));
-    //memcpy(V,Vnew,(M+1)*3*sizeof(double));
 
     // Iteration Counter
     if (itr == MaxIt){
       itr = itr - 1;
       break;
     }
-
   }
 
+  if(suborbital){
+    // Set suborbital flag to stop iterations early.
+    orb.SetSubOrbital();
+    } 
 }

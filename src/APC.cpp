@@ -8,6 +8,7 @@
 *                    via Adaptive Picard-Chebyshev Iteration: Applications in Astrodynamics", JGCD, 2016.
 */
 
+#include "SpiceUsr.h"
 #include <adaptive_picard_chebyshev.h>
 #include <c_functions.h>
 #include <EGM2008.h>
@@ -17,9 +18,10 @@
 #include <Orbit.h>
 #include <APC.h>
 
-std::vector<std::vector<double> > PropagateICs(std::vector<double> r, std::vector<double> v, double t0, double tf){
+std::vector<std::vector<double> > PropagateICs(std::vector<double> r, std::vector<double> v, double t0, double tf, double area, double reflectance, double mass, double drag_C, bool compute_drag, bool compute_SRP, bool compute_third_body){
   printf("%s",typeid(r).name());
   //Convert vectors to array since pybind wants vectors but the functions are coded for arrays
+  Orbit orb(area,reflectance,mass,drag_C, compute_drag, compute_SRP, compute_third_body);
   double* r0 = &r[0];
   double* v0 = &v[0];
   double dt    = 30.0;                             // Soution Output Time Interval (s)
@@ -35,23 +37,20 @@ std::vector<std::vector<double> > PropagateICs(std::vector<double> r, std::vecto
   //Soln = static_cast<double*>(calloc(soln_size*6,sizeof(double)));       // Position (km) & Velocity (km/s)
 
   double Feval[2] = {0.0};
-
-  // Call Adaptive Picard Chebyshev Integrator
-  clock_t startTime = clock();
   std::vector<std::vector<double> > states;
-  // for (int tt=0; tt<=1; tt++){
-  states = adaptive_picard_chebyshev(r0,v0,t0,tf,dt,deg,tol,soln_size,Feval,Soln);
-  // }
-  clock_t endTime = clock();
-  float elapsedTime = ((float) (endTime - startTime))/CLOCKS_PER_SEC/(1.0);
-  printf("Elapsed time: %f s\t",elapsedTime);
-
+  //Load spice kernel
+  furnsh_c("de440.bsp");
+   // Call Adaptive Picard Chebyshev Integrator
+  states = adaptive_picard_chebyshev(r0,v0,t0,tf,dt,deg,tol,soln_size,Feval,Soln,orb);
+  //unload kernel
+  kclear_c();
   // Number of function evaluations
   int total;
   total = int(ceil(Feval[0] + Feval[1]*pow(6.0,2)/pow(deg,2)));
   printf("Func Evals: %i\t",total);
 
-  // Save as text file [time r v H]
+
+  // Assemble solution vector from solution array
   std::vector<std::vector<double> > States(6);
   double state[6] = {0.0};
   std::vector<double> Hs;
@@ -92,9 +91,9 @@ std::vector<std::vector<double> > PropagateICs(std::vector<double> r, std::vecto
   return Solution;
 }
 
-class Orbit PropagateOrbit(std::vector<double> r, std::vector<double> v, double t0, double tf){
+class Orbit PropagateOrbit(std::vector<double> r, std::vector<double> v, double t0, double tf, double area, double reflectance, double mass, double drag_C, bool compute_drag, bool compute_SRP, bool compute_third_body){
   std::vector<std::vector<double> > solution;
-  solution = PropagateICs(r,v,t0,tf);
+  solution = PropagateICs(r, v, t0 , tf,  area,  reflectance,  mass,  drag_C,  compute_drag,  compute_SRP,  compute_third_body);
   Orbit orbit(solution);
   return orbit;
 }
