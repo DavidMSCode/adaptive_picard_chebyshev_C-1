@@ -16,7 +16,7 @@ if os.name != 'nt':
 #    cpp_extra_args.append('-mmacosx-version-min=10.9')
 
 """Get all necessary C++ source files"""
-SRCFOLDERS = ["src","PYsrc"]
+SRCFOLDERS = ["src","srcPy"]
 SRCFILES=[]
 for folder in SRCFOLDERS:
     SRCFILES=SRCFILES+glob(folder+"/*.cpp")
